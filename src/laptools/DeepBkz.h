@@ -358,6 +358,18 @@ public:
 
 
    ///
+   /// @brief setter of lowerBound
+   /// @param[in] inLowerBound
+   ///
+   virtual double getLowerBound(
+         double inLowerBound
+         )
+   {
+      return lowerBound;
+   }
+
+
+   ///
    /// @brief get header of csv formed log
    ///
    virtual std::string getCsvLogHeader(
