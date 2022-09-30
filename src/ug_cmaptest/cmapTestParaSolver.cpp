@@ -102,8 +102,8 @@ CMapTestParaSolver::runDeepBkz(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
-   int verbose = paraParams->getIntParamValue(DeepBkzVerbose);
+   Config config(paraParams->getStringParamValue(LaptoolsParamFilePath));
+   int verbose = paraParams->getIntParamValue(BkzVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
 
@@ -119,13 +119,13 @@ CMapTestParaSolver::runDeepBkz(
    previousNotificationTime = paraTimer->getElapsedTime() - notificationInterval;
    CmapDeepBkz<int, double, double> reductionObj{
       L, this, getRank(), getThreadId(), verbose, mergeBasisFromLC};
-   reductionObj.setNSendVectors(paraParams->getIntParamValue(DeepBkzNumOfSendVectorsToPool));
-   reductionObj.setNReceivedVectors(paraParams->getIntParamValue(DeepBkzNumOfReceiveVectorsFromPool));
+   reductionObj.setNSendVectors(paraParams->getIntParamValue(BkzNumOfSendVectorsToPool));
+   reductionObj.setNReceivedVectors(paraParams->getIntParamValue(BkzNumOfReceiveVectorsFromPool));
    reductionObj.lll();
    reductionObj.deeplll();
-   int startBlocksize      = paraParams->getIntParamValue(DeepBkzStartBlockSize);
-   int endBlocksize        = paraParams->getIntParamValue(DeepBkzEndBlockSize);
-   int blocksizeInterval   = paraParams->getIntParamValue(DeepBkzBlockSizeInterval);
+   int startBlocksize      = paraParams->getIntParamValue(BkzStartBlockSize);
+   int endBlocksize        = paraParams->getIntParamValue(BkzEndBlockSize);
+   int blocksizeInterval   = paraParams->getIntParamValue(BkzBlockSizeInterval);
    int blocksize;
    for( blocksize = startBlocksize; blocksize <= endBlocksize; blocksize += blocksizeInterval )
    {
@@ -157,7 +157,7 @@ CMapTestParaSolver::runEnum(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   Config config(paraParams->getStringParamValue(LaptoolsParamFilePath));
    int verbose = paraParams->getIntParamValue(EnumVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
@@ -195,7 +195,7 @@ CMapTestParaSolver::runSieve(
    auto L = std::make_shared<LapTools::Lattice<int, double>>(*cmapLapParaTask->getBasis());
 
    // load from param file
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   Config config(paraParams->getStringParamValue(LaptoolsParamFilePath));
    int verbose = paraParams->getIntParamValue(SieveVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);

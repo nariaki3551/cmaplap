@@ -1,11 +1,8 @@
 # ------------------------------------------
 #     DeepBkz
 # ------------------------------------------
-# ReductionType; 1 no-communication, 2 parallel 3 recursive
-DeepBkzReductionType = 2
-DeepBkzStartBlockSize = 30
-DeepBkzEndBlockSize = 30
-DeepBkzBlockSizeInterval = 5
-RandomizeRows = -1
-DeepBkzNumOfSendVectorsToPool = 5
-DeepBkzNumOfReceiveVectorsFromPool = 1
+BkzStartBlockSize = 30
+BkzEndBlockSize = 30
+BkzBlockSizeInterval = 5
+BkzNumOfSendVectorsToPool = 5
+BkzNumOfReceiveVectorsFromPool = 1

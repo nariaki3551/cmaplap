@@ -76,8 +76,8 @@ CMapDeepBkzParaSolver::runDeepBkz(
    LatticeBasis<int> basis{*cmapLapParaTask->getBasis()};
    auto L = std::make_shared<LapTools::Lattice<int, double>>(basis);
 
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
-   int verbose = paraParams->getIntParamValue(DeepBkzVerbose);
+   Config config(paraParams->getStringParamValue(LaptoolsParamFilePath));
+   int verbose = paraParams->getIntParamValue(BkzVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);
 
@@ -93,16 +93,16 @@ CMapDeepBkzParaSolver::runDeepBkz(
    previousNotificationTime = paraTimer->getElapsedTime() - notificationInterval;
    CmapDeepBkz<int, double, double> reductionObj{
       L, this, getRank(), getThreadId(), verbose, mergeBasisFromLC};
-   reductionObj.setNSendVectors(paraParams->getIntParamValue(DeepBkzNumOfSendVectorsToPool));
+   reductionObj.setNSendVectors(paraParams->getIntParamValue(BkzNumOfSendVectorsToPool));
 
    // reduction (LLL, DeepLLL)
    reductionObj.lll();
    reductionObj.deeplll();
 
    // reduction (DeepBKZ)
-   int startBlocksize      = paraParams->getIntParamValue(DeepBkzStartBlockSize);
-   int endBlocksize        = paraParams->getIntParamValue(DeepBkzEndBlockSize);
-   int intervalBlocksize   = paraParams->getIntParamValue(DeepBkzBlockSizeInterval);
+   int startBlocksize      = paraParams->getIntParamValue(BkzStartBlockSize);
+   int endBlocksize        = paraParams->getIntParamValue(BkzEndBlockSize);
+   int intervalBlocksize   = paraParams->getIntParamValue(BkzBlockSizeInterval);
    int blocksize;
    for( blocksize = startBlocksize; blocksize <= endBlocksize; blocksize += intervalBlocksize )
    {

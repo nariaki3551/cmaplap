@@ -8,6 +8,6 @@ SolutionFilePath          = "./logs/all_deepbkz__"
 # ------------------------------------------
 #     Base ( LC )
 # ------------------------------------------
-NumOfInitialDeepBkzSolvers = -1
+NumOfInitialBkzSolvers = -1
 NumOfInitialEnumSolvers    = 0
 NumOfInitialSieveSolvers   = 0

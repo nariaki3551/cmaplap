@@ -1428,9 +1428,9 @@ CMapLapParaLoadCoordinator::createParaTaskDeepBkz(
             new LatticeBasis<int>(*(instancePool->getIncumbentBasis()->getBasis()))
             );
    }
-   int u = paraParams->getIntParamValue(RandomizeRows);  // number of randomize rows
+   int u = paraParams->getIntParamValue(NumRandomizedRows);  // number of randomize rows
    int seed = seedGenerator();
-   int blockSize = paraParams->getIntParamValue(DeepBkzStartBlockSize);
+   int blockSize = paraParams->getIntParamValue(BkzStartBlockSize);
    double estimatedValue = -DBL_MAX;
 
    std::shared_ptr<CMapLapParaTask> cmapLapParaTask(
@@ -1512,7 +1512,7 @@ CMapLapParaLoadCoordinator::createParaTaskSieve(
 }
 
 ///
-/// create a paraTask for local solvers in LoadCoordinator when a vector is inserted in vectorElement
+/// create a paraTask for local solvers in Load Coordinator when a vector is inserted in vectorElement
 /// @return CMapLapParaTask*
 ///
 CMapLapParaTask*
@@ -1710,11 +1710,11 @@ CMapLapParaLoadCoordinator::run(
    int begin = 0;
    int end   = cmapLapParaInitiator->getDimension() - 1;
 
-   if( paraParams->getBoolParamValue(OutputSimilarityOfBasis) )
+   if( paraParams->getBoolParamValue(LogSimilarityOfBasis) )
       outputSimilarityOfBasisHeader();
 
    double previousLogShareDataPoolTime = 0.0;
-   double previousOutputSimilarityOfBasisTime = 0.0;
+   double previousLogSimilarityOfBasisTime = 0.0;
    double nextOutputLctsStatTime = paraTimer->getElapsedTime();
 
    // for adjust solver's notification interval
@@ -1844,20 +1844,20 @@ CMapLapParaLoadCoordinator::run(
       }
 
       // Logging : Similarity of solver's basis
-      if( paraParams->getBoolParamValue(OutputSimilarityOfBasis) &&
-            ( paraTimer->getElapsedTime() - previousOutputSimilarityOfBasisTime )
-            > paraParams->getRealParamValue(IntervalTimeOfOutputSimilarityOfBasis)
+      if( paraParams->getBoolParamValue(LogSimilarityOfBasis) &&
+            ( paraTimer->getElapsedTime() - previousLogSimilarityOfBasisTime )
+            > paraParams->getRealParamValue(IntervalTimeOfLogSimilarityOfBasis)
             )
       {
          std::deque<std::shared_ptr<LatticeBasis<int>>> basisDeque = cmapLapParaSolverPool->getBasisOfSolvers();
          if( basisDeque.size() > 1 )
          {
             outputSimilarityOfBasis(basisDeque);
-            previousOutputSimilarityOfBasisTime = paraTimer->getElapsedTime();
+            previousLogSimilarityOfBasisTime = paraTimer->getElapsedTime();
          }
       }
 
-      // Adjust NotificationInterval for Load Coordinator's load
+      // Adjust NotificationInterval for LoadCoordinator's load
       if( (paraTimer->getElapsedTime() - previousTermUpdateNotificationIntervalTime)
             > paraParams->getRealParamValue(LCTermTimeUpdateNotificationInterval) )
       {
@@ -1891,7 +1891,7 @@ CMapLapParaLoadCoordinator::run(
       cmapLapParaInitiator->setFinalSolverStatus(ParaCMapLAP::LowerBoundIsReached);
    }
 
-   // Logging : Statistics of Load Coordinator
+   // Logging : Statistics of LoadCoordinator
    *osCsvLogCheckpoint
       << Logging::getCsvCheckpointStateString(
             paraTimer->getElapsedTime(),
@@ -2591,7 +2591,7 @@ CMapLapParaLoadCoordinator::warmStart(
       if( logSolvingStatusFlag )
       {
          *osLogSolvingStatus
-            << "warmStart: randomize basis; size = " << paraParams->getIntParamValue(RandomizeRows) << std::endl;
+            << "warmStart: randomize basis; size = " << paraParams->getIntParamValue(NumRandomizedRows) << std::endl;
       }
       while( (paraTask=tempTaskPool->extractTask()) )
       {
@@ -2599,7 +2599,6 @@ CMapLapParaLoadCoordinator::warmStart(
          {
          case DeepBkz:
             paraTask->setU(0); // do not randamize
-            // paraTask->setU(paraParams->getIntParamValue(RandomizeRows));
             paraDeepBkzTaskPool->insert(paraTask);  // active DeepBkz tasks in the previous run
             break;
          case Enum:

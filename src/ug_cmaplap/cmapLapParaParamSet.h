@@ -63,18 +63,16 @@ static const int CMapLapParaParamsBoolFirst           = CMapLapParaParamsFirst;
 //-------------------------------------------------------------------------
 static const int WarmStartOnlyPool                    = CMapLapParaParamsBoolFirst + 0;
 static const int NoWaitNotificationId                 = CMapLapParaParamsBoolFirst + 1;
-static const int EnumPruningGH                        = CMapLapParaParamsBoolFirst + 2;
-static const int EnumPruningLowerBound                = CMapLapParaParamsBoolFirst + 3;
-static const int ShareIncumbentVector                 = CMapLapParaParamsBoolFirst + 4;
-static const int LogShareDataPoolAll                  = CMapLapParaParamsBoolFirst + 5;
-static const int LogShareDataPoolStat                 = CMapLapParaParamsBoolFirst + 6;
-static const int CheckpointThreading                  = CMapLapParaParamsBoolFirst + 7;
-static const int CheckpointReserving                  = CMapLapParaParamsBoolFirst + 8;
-static const int OutputSimilarityOfBasis              = CMapLapParaParamsBoolFirst + 9;
-static const int DynamicDimensionOfSharedLattice      = CMapLapParaParamsBoolFirst + 10;
-static const int AutoAdjustmentNotificationInterval   = CMapLapParaParamsBoolFirst + 11;
+static const int ShareIncumbentVector                 = CMapLapParaParamsBoolFirst + 2;
+static const int LogShareDataPoolAll                  = CMapLapParaParamsBoolFirst + 3;
+static const int LogShareDataPoolStat                 = CMapLapParaParamsBoolFirst + 4;
+static const int CheckpointThreading                  = CMapLapParaParamsBoolFirst + 5;
+static const int CheckpointReserving                  = CMapLapParaParamsBoolFirst + 6;
+static const int LogSimilarityOfBasis                 = CMapLapParaParamsBoolFirst + 7;
+static const int DynamicDimensionOfSharedLattice      = CMapLapParaParamsBoolFirst + 8;
+static const int AutoAdjustmentNotificationInterval   = CMapLapParaParamsBoolFirst + 9;
 //-------------------------------------------------------------------------
-static const int CMapLapParaParamsBoolLast            = CMapLapParaParamsBoolFirst + 11;
+static const int CMapLapParaParamsBoolLast            = CMapLapParaParamsBoolFirst + 9;
 static const int CMapLapParaParamsBoolN               = CMapLapParaParamsBoolLast - CMapLapParaParamsBoolFirst + 1;
 ///
 /// Int parameters
@@ -82,46 +80,42 @@ static const int CMapLapParaParamsBoolN               = CMapLapParaParamsBoolLas
 static const int CMapLapParaParamsIntFirst            = CMapLapParaParamsBoolLast + 1;
 //-------------------------------------------------------------------------
 static const int MaxSizeOfMessageQueue                = CMapLapParaParamsIntFirst + 0;
-static const int DeepBkzVerbose                       = CMapLapParaParamsIntFirst + 1;
+static const int BkzVerbose                           = CMapLapParaParamsIntFirst + 1;
 static const int EnumVerbose                          = CMapLapParaParamsIntFirst + 2;
 static const int SieveVerbose                         = CMapLapParaParamsIntFirst + 3;
-static const int RandomizeRows                        = CMapLapParaParamsIntFirst + 4;
-static const int DeepBkzReductionType                 = CMapLapParaParamsIntFirst + 5;
-static const int DeepBkzStartBlockSize                = CMapLapParaParamsIntFirst + 6;
-static const int DeepBkzEndBlockSize                  = CMapLapParaParamsIntFirst + 7;
-static const int DeepBkzBlockSizeInterval             = CMapLapParaParamsIntFirst + 8;
-static const int DeepBkzRecursiveMaxTour              = CMapLapParaParamsIntFirst + 9;
-static const int DeepBkzRecursiveLowerBeta            = CMapLapParaParamsIntFirst + 10;
-static const int DeepBkzNumOfSendVectorsToPool        = CMapLapParaParamsIntFirst + 11;
-static const int DeepBkzNumOfReceiveVectorsFromPool   = CMapLapParaParamsIntFirst + 12;
-static const int EnumPruningLowerBlockSize            = CMapLapParaParamsIntFirst + 13;
-static const int EnumNumOfSendVectorsToPool           = CMapLapParaParamsIntFirst + 14;
-static const int EnumSamplingDepth                    = CMapLapParaParamsIntFirst + 15;
-static const int EnumLowerNumberOfDividedSearchTree   = CMapLapParaParamsIntFirst + 16;
-static const int SubEnumProjectedDimension            = CMapLapParaParamsIntFirst + 17;
-static const int SubEnumNSendVectorsToPool            = CMapLapParaParamsIntFirst + 18;
-static const int SieveMaxCollision                    = CMapLapParaParamsIntFirst + 19;
-static const int SieveMaxListSize                     = CMapLapParaParamsIntFirst + 20;
-static const int SieveMaxStackSize                    = CMapLapParaParamsIntFirst + 21;
-static const int SieveStartNVectors                   = CMapLapParaParamsIntFirst + 22;
-static const int SieveNThreads                        = CMapLapParaParamsIntFirst + 23;
-static const int SieveNumOfSendVectorsToPool          = CMapLapParaParamsIntFirst + 24;
-static const int SieveNumOfReceiveVectorsFromPool     = CMapLapParaParamsIntFirst + 25;
-static const int BlockSizeForLocalSolver              = CMapLapParaParamsIntFirst + 26;
-static const int NumOfInitialDeepBkzSolvers           = CMapLapParaParamsIntFirst + 27;
-static const int NumOfInitialEnumSolvers              = CMapLapParaParamsIntFirst + 28;
-static const int NumOfInitialSieveSolvers             = CMapLapParaParamsIntFirst + 29;
-static const int NumOfLocalSolversInLC                = CMapLapParaParamsIntFirst + 30;
-static const int ShareDataPoolSize                    = CMapLapParaParamsIntFirst + 31;
-static const int InstancePoolSize                     = CMapLapParaParamsIntFirst + 32;
-static const int WriteSizeShareDataPool               = CMapLapParaParamsIntFirst + 33;
-static const int LocalTaskNVectorLowerBound           = CMapLapParaParamsIntFirst + 34;
-static const int LowerBoundOfInstancePoolShouldHold   = CMapLapParaParamsIntFirst + 35;
-static const int ProjectedDimension                   = CMapLapParaParamsIntFirst + 36;
-static const int DimensionOfSharedLattice             = CMapLapParaParamsIntFirst + 37;
-static const int NumOfSamplingForSimilarityOfBasis    = CMapLapParaParamsIntFirst + 38;
+static const int NumRandomizedRows                    = CMapLapParaParamsIntFirst + 4;
+static const int BkzStartBlockSize                    = CMapLapParaParamsIntFirst + 5;
+static const int BkzEndBlockSize                      = CMapLapParaParamsIntFirst + 6;
+static const int BkzBlockSizeInterval                 = CMapLapParaParamsIntFirst + 7;
+static const int BkzNumOfSendVectorsToPool            = CMapLapParaParamsIntFirst + 8;
+static const int BkzNumOfReceiveVectorsFromPool       = CMapLapParaParamsIntFirst + 9;
+static const int EnumNumOfSendVectorsToPool           = CMapLapParaParamsIntFirst + 10;
+static const int EnumSamplingDepth                    = CMapLapParaParamsIntFirst + 11;
+static const int EnumLowerNumberOfDividedSearchTree   = CMapLapParaParamsIntFirst + 12;
+static const int SubEnumProjectedDimension            = CMapLapParaParamsIntFirst + 13;
+static const int SubEnumNumOfSendVectorsToPool        = CMapLapParaParamsIntFirst + 14;
+static const int SieveMaxCollision                    = CMapLapParaParamsIntFirst + 15;
+static const int SieveMaxListSize                     = CMapLapParaParamsIntFirst + 16;
+static const int SieveMaxStackSize                    = CMapLapParaParamsIntFirst + 17;
+static const int SieveStartNVectors                   = CMapLapParaParamsIntFirst + 18;
+static const int SieveNumThreads                      = CMapLapParaParamsIntFirst + 19;
+static const int SieveNumOfSendVectorsToPool          = CMapLapParaParamsIntFirst + 20;
+static const int SieveNumOfReceiveVectorsFromPool     = CMapLapParaParamsIntFirst + 21;
+static const int BlockSizeForLocalSolver              = CMapLapParaParamsIntFirst + 22;
+static const int NumOfInitialBkzSolvers               = CMapLapParaParamsIntFirst + 23;
+static const int NumOfInitialEnumSolvers              = CMapLapParaParamsIntFirst + 24;
+static const int NumOfInitialSieveSolvers             = CMapLapParaParamsIntFirst + 25;
+static const int NumOfLocalSolversInLC                = CMapLapParaParamsIntFirst + 26;
+static const int ShareDataPoolSize                    = CMapLapParaParamsIntFirst + 27;
+static const int InstancePoolSize                     = CMapLapParaParamsIntFirst + 28;
+static const int WriteSizeShareDataPool               = CMapLapParaParamsIntFirst + 29;
+static const int LocalTaskNVectorLowerBound           = CMapLapParaParamsIntFirst + 30;
+static const int LowerBoundOfInstancePoolShouldHold   = CMapLapParaParamsIntFirst + 31;
+static const int ProjectedDimension                   = CMapLapParaParamsIntFirst + 32;
+static const int DimensionOfSharedLattice             = CMapLapParaParamsIntFirst + 33;
+static const int NumOfSamplingForSimilarityOfBasis    = CMapLapParaParamsIntFirst + 34;
 //-------------------------------------------------------------------------
-static const int CMapLapParaParamsIntLast             = CMapLapParaParamsIntFirst + 38;
+static const int CMapLapParaParamsIntLast             = CMapLapParaParamsIntFirst + 34;
 static const int CMapLapParaParamsIntN                = CMapLapParaParamsIntLast - CMapLapParaParamsIntFirst + 1;
 ///
 /// Longint parameters
@@ -136,27 +130,24 @@ static const int CMapLapParaParamsLongintN            = CMapLapParaParamsLongint
 ///
 static const int CMapLapParaParamsRealFirst           = CMapLapParaParamsLongintLast + 1;
 //-------------------------------------------------------------------------
-static const int LowerBoundOfNorm                     = CMapLapParaParamsRealFirst   + 0;
-static const int LowerBoundOfApproxFactor             = CMapLapParaParamsRealFirst   + 1;
-static const int DeepBkzTaskMaxTimeLimit              = CMapLapParaParamsRealFirst   + 2;
-static const int EnumTaskMaxTimeLimit                 = CMapLapParaParamsRealFirst   + 3;
-static const int SieveTaskMaxTimeLimit                = CMapLapParaParamsRealFirst   + 4;
-static const int EnumTotalProb                        = CMapLapParaParamsRealFirst   + 5;
-static const int EnumTraversedNodesPerSeconds         = CMapLapParaParamsRealFirst   + 6;
-static const int EnumPruningParameter                 = CMapLapParaParamsRealFirst   + 7;
-static const int RandomizeScale                       = CMapLapParaParamsRealFirst   + 8;
-static const int EnumStartTime                        = CMapLapParaParamsRealFirst   + 9;
-static const int SieveStartTime                       = CMapLapParaParamsRealFirst   + 10;
-static const int IntervalTimeOfAssignmentTableOutput  = CMapLapParaParamsRealFirst   + 11;
-static const int IntervalTimeOfLogShareDataPool       = CMapLapParaParamsRealFirst   + 12;
-static const int IReceiveInterval                     = CMapLapParaParamsRealFirst   + 13;
-static const int ShareVectorsInterval                 = CMapLapParaParamsRealFirst   + 14;
-static const int IntervalTimeOfOutputSimilarityOfBasis = CMapLapParaParamsRealFirst  + 15;
-static const int LCTermTimeUpdateNotificationInterval = CMapLapParaParamsRealFirst   + 16;
-static const int LCUpperIdleRatio                     = CMapLapParaParamsRealFirst   + 17;
-static const int LCLowerIdleRatio                     = CMapLapParaParamsRealFirst   + 18;
+static const int LowerBoundOfNorm                     = CMapLapParaParamsRealFirst + 0;
+static const int LowerBoundOfApproxFactor             = CMapLapParaParamsRealFirst + 1;
+static const int DeepBkzTaskMaxTimeLimit              = CMapLapParaParamsRealFirst + 2;
+static const int EnumTaskMaxTimeLimit                 = CMapLapParaParamsRealFirst + 3;
+static const int SieveTaskMaxTimeLimit                = CMapLapParaParamsRealFirst + 4;
+static const int EnumTraversedNodesPerSeconds         = CMapLapParaParamsRealFirst + 5;
+static const int EnumPruningParameter                 = CMapLapParaParamsRealFirst + 6;
+static const int RandomizeScale                       = CMapLapParaParamsRealFirst + 7;
+static const int IntervalTimeOfAssignmentTableOutput  = CMapLapParaParamsRealFirst + 8;
+static const int IntervalTimeOfLogShareDataPool       = CMapLapParaParamsRealFirst + 9;
+static const int IReceiveInterval                     = CMapLapParaParamsRealFirst + 10;
+static const int ShareVectorsInterval                 = CMapLapParaParamsRealFirst + 11;
+static const int IntervalTimeOfLogSimilarityOfBasis   = CMapLapParaParamsRealFirst + 12;
+static const int LCTermTimeUpdateNotificationInterval = CMapLapParaParamsRealFirst + 13;
+static const int LCUpperIdleRatio                     = CMapLapParaParamsRealFirst + 14;
+static const int LCLowerIdleRatio                     = CMapLapParaParamsRealFirst + 15;
 //-------------------------------------------------------------------------
-static const int CMapLapParaParamsRealLast            = CMapLapParaParamsRealFirst   + 18;
+static const int CMapLapParaParamsRealLast            = CMapLapParaParamsRealFirst + 15;
 static const int CMapLapParaParamsRealN               = CMapLapParaParamsRealLast - CMapLapParaParamsRealFirst + 1;
 ///
 /// Char parameters
@@ -165,13 +156,13 @@ static const int CMapLapParaParamsCharFirst           = CMapLapParaParamsRealLas
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 static const int CMapLapParaParamsCharLast            = CMapLapParaParamsCharFirst - 1;   // No params -1
-static const int CMapLapParaParamsCharN                = CMapLapParaParamsCharLast - CMapLapParaParamsCharFirst + 1;
+static const int CMapLapParaParamsCharN               = CMapLapParaParamsCharLast - CMapLapParaParamsCharFirst + 1;
 ///
 /// String parameters
 ///
 static const int CMapLapParaParamsStringFirst         = CMapLapParaParamsCharLast    + 1;
 //-------------------------------------------------------------------------
-static const int CMapLapParamFilePath                 = CMapLapParaParamsStringFirst + 0;
+static const int LaptoolsParamFilePath                 = CMapLapParaParamsStringFirst + 0;
 //-------------------------------------------------------------------------
 static const int CMapLapParaParamsStringLast          = CMapLapParaParamsStringFirst + 0;
 static const int CMapLapParaParamsStringN             = CMapLapParaParamsStringLast - CMapLapParaParamsStringFirst + 1;

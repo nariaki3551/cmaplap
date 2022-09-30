@@ -7,8 +7,8 @@ LogSolvingStatusFilePath  = "./logs/"
 CheckpointFilePath        = "./logs/"
 SolutionFilePath          = "./logs/"
 StatisticsToStdout = FALSE
-OutputSimilarityOfBasis = TRUE
-IntervalTimeOfOutputSimilarityOfBasis = 20
+LogSimilarityOfBasis = TRUE
+IntervalTimeOfLogSimilarityOfBasis = 20
 NumOfSamplingForSimilarityOfBasis = 100
 IntervalTimeOfLogShareDataPool = 60
 LogShareDataPoolAll = FALSE
@@ -17,10 +17,10 @@ LogShareDataPoolStat = TRUE
 # ------------------------------------------
 #     Debug
 # ------------------------------------------
-TagTrace       = FALSE
-DeepBkzVerbose = 0
-EnumVerbose    = 0
-SieveVerbose   = 0
+TagTrace      = FALSE
+BkzVerbose    = 0
+EnumVerbose   = 0
+SieveVerbose  = 0
 
 # ------------------------------------------
 #     Checkpoint
@@ -40,12 +40,12 @@ LCLowerIdleRatio = 0.3
 NotificationInterval = 1
 IReceiveInterval     = 1
 ShareVectorsInterval = 1
-CMapLapParamFilePath = "./settings/laptools.ug.param"
+LaptoolsParamFilePath = "./settings/laptools.ug.param"
 
 # ------------------------------------------
 #     Base ( LC )
 # ------------------------------------------
-NumOfInitialDeepBkzSolvers = -1
+NumOfInitialBkzSolvers = -1
 NumOfInitialEnumSolvers    = 0
 NumOfInitialSieveSolvers   = 0
 ShareDataPoolSize = 1000000
@@ -62,14 +62,12 @@ LocalTaskNVectorLowerBound = 2
 # ------------------------------------------
 #     DeepBkz
 # ------------------------------------------
-# ReductionType; 1 no-communication, 2 parallel 3 recursive
-DeepBkzReductionType = 2
-DeepBkzStartBlockSize = 30
-DeepBkzEndBlockSize = 30
-DeepBkzBlockSizeInterval = 5
-RandomizeRows = -1
-DeepBkzNumOfSendVectorsToPool = 5
-DeepBkzNumOfReceiveVectorsFromPool = 1
+BkzStartBlockSize = 30
+BkzEndBlockSize = 30
+BkzBlockSizeInterval = 5
+NumRandomizedRows = -1
+BkzNumOfSendVectorsToPool = 5
+BkzNumOfReceiveVectorsFromPool = 1
 
 # ------------------------------------------
 #     Enum

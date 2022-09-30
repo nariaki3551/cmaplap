@@ -58,51 +58,43 @@ CMapLapParaParamSet::CMapLapParaParamSet(
    ///
    paraParams[WarmStartOnlyPool] = new UG::ParaParamBool(
          "WarmStartOnlyPool",
-         "# WarmStartOnlyPool is TRUE: Load Coordnator reads only Basis and Vector pool when it uses warm start",
+         "# LoadCoordinator reads only Basis and Vector pool in warm start.",
          false);
    paraParams[NoWaitNotificationId] = new UG::ParaParamBool(
          "NoWaitNotificationId",
-         "# NoWaitNotificationId is TRUE: Solvers do not wait NotificationId from LC (LC doesnot send recieve tag of NoWaitNotificationId)",
-         false);
-   paraParams[EnumPruningGH] = new UG::ParaParamBool(
-         "EnumPruningGH",
-         "# EnumPruningGH is TRUE: pruning enumeration tree by GH, FALSE: no pruning enumeration tree by GH [Default value: FALSE]",
-         false);
-   paraParams[EnumPruningLowerBound] = new UG::ParaParamBool(
-         "EnumPruningLowerBound",
-         "# EnumPruningLowerBound is TRUE: pruning enumeration tree by Lower Bound, FALSE: no pruning enumeration tree by Lower Bound [Default value: FALSE]",
+         "# Solvers do not wait NotificationId from LoadCoordinator (LoadCoordinator does not send recieve tag of NoWaitNotificationId)",
          false);
    paraParams[ShareIncumbentVector] = new UG::ParaParamBool(
          "ShareIncumbentVector",
-         "# ShareIncumbentVector is TRUE: Each solver receives the incumbent solution, FALSE: Each solver does not receive the incumbent solution [Default value: TRUE]",
+         "# Each solver receives the incumbent solution [Default value: TRUE]",
          true);
    paraParams[LogShareDataPoolAll] = new UG::ParaParamBool(
          "LogShareDataPoolAll",
-         "# LogShareDataPoolAll is TRUE: write norm of vectors in vector pool [Default value: FALSE]",
+         "# Display norm of vectors in vector pool [Default value: FALSE]",
          false);
    paraParams[LogShareDataPoolStat] = new UG::ParaParamBool(
          "LogShareDataPoolStat",
-         "# LogShareDataPoolStat is TRUE: write statistics infomation of vectors in vector pool [Default value: FALSE]",
+         "# Display statistics information of vectors in vector pool [Default value: FALSE]",
          false);
    paraParams[CheckpointThreading] = new UG::ParaParamBool(
          "CheckpointThreading",
-         "# CheckpointThreading is TRUE: create therad for writing checkpoint [Default value: FALSE]",
+         "# Create a thread for writing checkpoint [Default value: FALSE]",
          true);
    paraParams[CheckpointReserving] = new UG::ParaParamBool(
          "CheckpointReserving",
-         "# CheckpointReserving is TRUE: copy reserved checkpoint objectes. Therefore when this is True, memory usage is increase [Default value: TRUE]",
+         "# Copy reserved checkpoint objects. (This leads to increased memory usage.) [Default value: TRUE]",
          true);
-   paraParams[OutputSimilarityOfBasis] = new UG::ParaParamBool(
-         "OutputSimilarityOfBasis",
-         "# OutputSimilarityOfBasis is TRUE: output similarity of basis whose each solver [Default value: FALSE]",
+   paraParams[LogSimilarityOfBasis] = new UG::ParaParamBool(
+         "LogSimilarityOfBasis",
+         "# LogSimilarityOfBasis is TRUE: output similarity of basis whose each solver [Default value: FALSE]",
          false);
    paraParams[DynamicDimensionOfSharedLattice] = new UG::ParaParamBool(
          "DynamicDimensionOfSharedLattice",
-         "# DynamicDimensionOfSharedLattice is TRUE: dimension of shared lattice will dynamically change in the session [Default value: FALSE]",
+         "# Dimension of shared lattice will dynamically change in the session [Default value: FALSE]",
          false);
    paraParams[AutoAdjustmentNotificationInterval] = new UG::ParaParamBool(
          "AutoAdjustmentNotificationInterval",
-         "# AutoAdjustmentNotificationInterval is TRUE: While adjusting the solver's notification interval so that the idle ratio of LC does not exceed LCUpperIdleRatio, allow it to fall below NotificationInterval. [Default value: FALSE]",
+         "# Adjust the solver's notification interval so that LCLowerIdleRatio <= idle ratio of LoadCoordinator <= LCUpperIdleRatio. [Default value: FALSE]",
          false);
 
 
@@ -111,91 +103,67 @@ CMapLapParaParamSet::CMapLapParaParamSet(
    ///
    paraParams[MaxSizeOfMessageQueue] = new UG::ParaParamInt(
          "MaxSizeOfMessageQueue",
-         "# When the size of the message queue is greater than MaxSizeOfMessageQueue, Solver doesnot send any message other than paraSolution. If this parameter is -1, then this parameter is ignored. [Default value: 100][-1, INT_MAX]",
+         "# Maximum size of the message queue of solver. Solver does not send any message other than paraSolution when the size of the message queue is greater than it. -1 means no limit of queue. [Default value: 100][-1, INT_MAX]",
          100,
          -1,
          INT_MAX);
-   paraParams[DeepBkzVerbose] = new UG::ParaParamInt(
-         "DeepBkzVerbose",
-         "# DeepBkzVerbose verbose level: [Default value: 0][0, INT_MAX]",
+   paraParams[BkzVerbose] = new UG::ParaParamInt(
+         "BkzVerbose",
+         "# Control log level of BKZ task: [Default value: 0][0, INT_MAX]",
          0,
          0,
          INT_MAX);
    paraParams[EnumVerbose] = new UG::ParaParamInt(
          "EnumVerbose",
-         "# EnumVerbose verbose level: [Default value: 0][0, INT_MAX]",
+         "# Control log level of ENUM task: [Default value: 0][0, INT_MAX]",
          0,
          0,
          INT_MAX);
    paraParams[SieveVerbose] = new UG::ParaParamInt(
          "SieveVerbose",
-         "# SieveVerbose verbose level: [Default value: 0][0, INT_MAX]",
+         "# Control log level of Sieve task: [Default value: 0][0, INT_MAX]",
          0,
          0,
          INT_MAX);
-   paraParams[RandomizeRows] = new UG::ParaParamInt(
-         "RandomizeRows",
-         "# Randomize the RandomizeRows rows from the bottom of basis: -1 - randomize overall of basis 0 no randomize[Default value -1][-1, INT_MAX]",
+   paraParams[NumRandomizedRows] = new UG::ParaParamInt(
+         "NumRandomizedRows",
+         "# Number of randomized rows from the bottom of basis. -1 means no randomization [Default value -1][-1, INT_MAX]",
          -1,
          -1,
          INT_MAX);
-   paraParams[DeepBkzReductionType] = new UG::ParaParamInt(
-         "DeepBkzReductionType",
-         "# Reduction type of DeepBkz; 1 - no-communication DeepBkz, 2 - parallel DeepBkz [Default value: 2][1, 2]",
-         2,
-         1,
-         2);
-   paraParams[DeepBkzStartBlockSize] = new UG::ParaParamInt(
-         "DeepBkzStartBlockSize",
-         "# DeepBkz reduction with blocksize from DeepBkzStartBlockSize to DeepBkzEndBlockSize at intervals of DeepBkzBlockSizeInterval after randomize [Default value: 30][2, INT_MAX]",
+   paraParams[BkzStartBlockSize] = new UG::ParaParamInt(
+         "BkzStartBlockSize",
+         "# Bkz reduction with blocksize from BkzStartBlockSize to BkzEndBlockSize at intervals of BkzBlockSizeInterval [Default value: 30][2, INT_MAX]",
          30,
          2,
          INT_MAX);
-   paraParams[DeepBkzEndBlockSize] = new UG::ParaParamInt(
-         "DeepBkzEndBlockSize",
-         "# DeepBkz reduction with blocksize from DeepBkzStartBlockSize to DeepBkzEndBlockSize at intervals of DeepBkzBlockSizeInterval after randomize [Default value: 30][2, INT_MAX]",
+   paraParams[BkzEndBlockSize] = new UG::ParaParamInt(
+         "BkzEndBlockSize",
+         "# Bkz reduction with blocksize from BkzStartBlockSize to BkzEndBlockSize at intervals of BkzBlockSizeInterval [Default value: 30][2, INT_MAX]",
          30,
          2,
          INT_MAX);
-   paraParams[DeepBkzBlockSizeInterval] = new UG::ParaParamInt(
-         "DeepBkzBlockSizeInterval",
-         "# DeepBkz reduction with blocksize from DeepBkzStartBlockSize to DeepBkzEndBlockSize at intervals of DeepBkzBlockSizeInterval after randomize [Default value: 30][1, INT_MAX]",
+   paraParams[BkzBlockSizeInterval] = new UG::ParaParamInt(
+         "BkzBlockSizeInterval",
+         "# Bkz reduction with blocksize from BkzStartBlockSize to BkzEndBlockSize at intervals of BkzBlockSizeInterval [Default value: 30][1, INT_MAX]",
          5,
          1,
          INT_MAX);
-   paraParams[DeepBkzRecursiveMaxTour] = new UG::ParaParamInt(
-         "DeepBkzRecursiveMaxTour",
-         "# Max number of tour of Recursive DeepBkz whose depth is greather than 0 [Default value: 200]",
-         200,
-         1,
-         INT_MAX);
-   paraParams[DeepBkzRecursiveLowerBeta] = new UG::ParaParamInt(
-         "DeepBkzRecursiveLowerBeta",
-         "# Performs a recursive DeepBkz subroutine when the Enum successes in DeepBkz tour and BlockSize is a greater than or equal to DeepBkzLowerBeta [Default value: 20][2, INT_MAX]",
-         20,
-         2,
-         INT_MAX);
-   paraParams[DeepBkzNumOfSendVectorsToPool] = new UG::ParaParamInt(
-         "DeepBkzNumOfSendVectorsToPool",
-         "# Number of the vectors sended in DeepBkz [Default value: 1][0, INT_MAX]",
+   paraParams[BkzNumOfSendVectorsToPool] = new UG::ParaParamInt(
+         "BkzNumOfSendVectorsToPool",
+         "# Number of the vectors sended in Bkz to Load Coordnator [Default value: 1][0, INT_MAX]",
          0,
          0,
          INT_MAX);
-   paraParams[DeepBkzNumOfReceiveVectorsFromPool] = new UG::ParaParamInt(
-         "DeepBkzNumOfReceiveVectorsFromPool",
-         "# Number of the vectors received in DeepBkz [Default value: 10][0, INT_MAX]",
+   paraParams[BkzNumOfReceiveVectorsFromPool] = new UG::ParaParamInt(
+         "BkzNumOfReceiveVectorsFromPool",
+         "# Number of receiving vectors in Bkz from LoadCoordinator [Default value: 10][0, INT_MAX]",
          0,
          0,
-         INT_MAX);
-   paraParams[EnumPruningLowerBlockSize] = new UG::ParaParamInt(
-         "EnumPruningLowerBlockSize",
-         "# Pruning the enumeration tree when a blocksize of Enum if greater than or equal to EnumPruningLowerBlockSize [Default value: 45][1, INT_MAX]",
-         45,
-         1,
          INT_MAX);
    paraParams[EnumNumOfSendVectorsToPool] = new UG::ParaParamInt(
          "EnumNumOfSendVectorsToPool",
-         "# Number of sending vectors during Enumeration to pool of Load Coordnator  [Default value: 1][0, INT_MAX]",
+         "# Number of sending vectors during Enumeration to LoadCoordinator [Default value: 1][0, INT_MAX]",
          0,
          0,
          INT_MAX);
@@ -213,31 +181,31 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          INT_MAX);
    paraParams[SubEnumProjectedDimension] = new UG::ParaParamInt(
          "SubEnumProjectedDimension",
-         "# Projected dimension of SubEnum, if it is 0 then run norml Enum [Default value: 0][0, INT_MAX]",
+         "# Projected dimension of SubEnum. 0 means run normal Enum [Default value: 0][0, INT_MAX]",a
          0,
          0,
          INT_MAX);
-   paraParams[SubEnumNSendVectorsToPool] = new UG::ParaParamInt(
-         "SubEnumNSendVectorsToPool",
-         "# Number of the vectors sended in SubEnum [Default value: 0][0, INT_MAX]",
+   paraParams[SubEnumNumOfSendVectorsToPool] = new UG::ParaParamInt(
+         "SubEnumNumOfSendVectorsToPool",
+         "# Number of sending vectors in SubEnum to LoadCoordinator [Default value: 0][0, INT_MAX]",
          0,
          0,
          INT_MAX);
    paraParams[SieveMaxCollision] = new UG::ParaParamInt(
          "SieveMaxCollision",
-         "# Sieve terminates the number of collision exceeds SieveMaxCollision, if SieveMaxCollision is -1, it is ignore [Default value: -1][-1, INT_MAX]",
+         "# Sieve terminates the number of collision exceeds SieveMaxCollision. -1 means no limit [Default value: -1][-1, INT_MAX]",
          -1,
          -1,
          INT_MAX);
    paraParams[SieveMaxListSize] = new UG::ParaParamInt(
          "SieveMaxListSize",
-         "# Maximum List L size, if SieveMaxListSize is -1, it is ignore [Default value: 10000000][-1, INT_MAX]",
+         "# Maximum List L size. -1 means no limit [Default value: 10000000][-1, INT_MAX]",
          10000000,
          -1,
          INT_MAX);
    paraParams[SieveMaxStackSize] = new UG::ParaParamInt(
          "SieveMaxStackSize",
-         "# Maximum Stack S size, if SieveMaxStackSize is -1, it is ignore [Default value: 10000000][-1, INT_MAX]",
+         "# Maximum Stack S size. -1 means no limit [Default value: 10000000][-1, INT_MAX]",
          10000000,
          -1,
          INT_MAX);
@@ -247,57 +215,57 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          100,
          -1,
          INT_MAX);
-   paraParams[SieveNThreads] = new UG::ParaParamInt(
-         "SieveNThreads",
-         "# Maximum number of threads of a Sieve solver, if value is 0, SieveNThreads is set to number of threads per rank in the machine [Default value: 32][0, INT_MAX]",
-         32,
-         0,
+   paraParams[SieveNumThreads] = new UG::ParaParamInt(
+         "SieveNumThreads",
+         "# Maximum number of threads of a Sieve solver. 0 means the number of threads per rank in the machine [Default value: -1][-1, INT_MAX]",
+         -1,
+         -1,
          INT_MAX);
    paraParams[SieveNumOfSendVectorsToPool] = new UG::ParaParamInt(
          "SieveNumOfSendVectorsToPool",
-         "# Number of the vectors sended in Sieve [Default value: 10][0, INT_MAX]",
+         "# Number of sending vectors in Sieve to LoadCoordinator [Default value: 10][0, INT_MAX]",
          10,
          0,
          INT_MAX);
    paraParams[SieveNumOfReceiveVectorsFromPool] = new UG::ParaParamInt(
          "SieveNumOfReceiveVectorsFromPool",
-         "# Number of the vectors received in Sieve [Default value: 100][0, INT_MAX]",
+         "# Number of receiving vectors in Sieve from LoadCoordinator [Default value: 100][0, INT_MAX]",
          100,
          0,
          INT_MAX);
    paraParams[BlockSizeForLocalSolver] = new UG::ParaParamInt(
          "BlockSizeForLocalSolver",
-         "# blocksize of DeepBkz for Local Solver [Default value: 10][1, 1000]",
+         "# blocksize of Bkz for Local Solver [Default value: 10][1, INT_MAX]",
          10,
          1,
-         1000);
-   paraParams[NumOfInitialDeepBkzSolvers] = new UG::ParaParamInt(
-         "NumOfInitialDeepBkzSolvers",
-         "# Number of DeepBkz solvers at the beginning of the run, if value is -1, NumOfInitialDeepBkzSolvers is set to number of solvers [Default value: -1][-1, INT_MAX]",
+         INT_MAX);
+   paraParams[NumOfInitialBkzSolvers] = new UG::ParaParamInt(
+         "NumOfInitialBkzSolvers",
+         "# Number of Bkz solvers at the beginning of the run. -1 means it is number of solvers [Default value: -1][-1, INT_MAX]",
          -1,
          -1,
          INT_MAX);
    paraParams[NumOfInitialEnumSolvers] = new UG::ParaParamInt(
          "NumOfInitialEnumSolvers",
-         "# Number of Enum solvers used  [Default value: 0][0, INT_MAX]",
+         "# Number of Enum solvers at the beginning of the run [Default value: 0][0, INT_MAX]",
          0,
-         -1,
+         0,
          INT_MAX);
    paraParams[NumOfInitialSieveSolvers] = new UG::ParaParamInt(
          "NumOfInitialSieveSolvers",
-         "# Number of Sieve solvers used  [Default value: 0][0, INT_MAX]",
+         "# Number of Sieve solvers at the beginning of the run [Default value: 0][0, INT_MAX]",
          0,
-         -1,
+         0,
          INT_MAX);
    paraParams[NumOfLocalSolversInLC] = new UG::ParaParamInt(
          "NumOfLocalSolversInLC",
-         "# Number of local solvers in LoadCoordinator [Default value: 0][0, 999999999]",
+         "# Number of local solvers in LoadCoordinator [Default value: 0][0, INT_MAX]",
          0,
          0,
-         999999999);
+         INT_MAX);
    paraParams[ShareDataPoolSize] = new UG::ParaParamInt(
          "ShareDataPoolSize",
-         "# Limit number of vectors stored in vector pool  [Default value: 100][0, INT_MAX]",
+         "# Limit number of vectors stored in vector pool  [Default value: 100000][0, INT_MAX]",
          100000,
          0,
          INT_MAX);
@@ -309,7 +277,7 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          INT_MAX);
    paraParams[WriteSizeShareDataPool] = new UG::ParaParamInt(
          "WriteSizeShareDataPool",
-         "# maximum number of vector pool vectors that are written in every checkpoint  [Default value: 1000][1, INT_MAX]",
+         "# Maximum number of vector pool vectors that are written in every checkpoint  [Default value: 1000][1, INT_MAX]",
          1000,
          1,
          INT_MAX);
@@ -353,19 +321,19 @@ CMapLapParaParamSet::CMapLapParaParamSet(
    ///
    paraParams[LowerBoundOfNorm] = new UG::ParaParamReal(
          "LowerBoundOfNorm",
-         "# Solver terminates when it finds the vector whose norm shorter than LowerBoundOfNorm [Default value: -1][0, DBL_MAX]",
+         "# Solvers terminate when they finds the vector whose norm shorter than it. -1 means it is ignored [Default value: -1][0, DBL_MAX]",
          -1,
          0.0,
          DBL_MAX);
    paraParams[LowerBoundOfApproxFactor] = new UG::ParaParamReal(
          "LowerBoundOfApproxFactor",
-         "# Solver terminates when it finds the vector whose approx factor shorter than LowerBoundOfApproxFactor [Default value: -1][0, DBL_MAX]",
+         "# Solvers terminate when they finds the vector whose approx factor shorter than it. -1 means it is ignored [Default value: -1][0, DBL_MAX]",
          -1,
          0.0,
          DBL_MAX);
-   paraParams[DeepBkzTaskMaxTimeLimit] = new UG::ParaParamReal(
-         "DeepBkzTaskMaxTimeLimit",
-         "# Max time limit of a DeepBkz para task. [Default value: DBL_MAX][0.0, DBL_MAX]",
+   paraParams[BkzTaskMaxTimeLimit] = new UG::ParaParamReal(
+         "BkzTaskMaxTimeLimit",
+         "# Max time limit of a Bkz para task. [Default value: DBL_MAX][0.0, DBL_MAX]",
          DBL_MAX,
          0.0,
          DBL_MAX);
@@ -381,12 +349,6 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          DBL_MAX,
          0.0,
          DBL_MAX);
-   paraParams[EnumTotalProb] = new UG::ParaParamReal(
-         "EnumTotalProb",
-         "# Total probability of finding the shortest vector in our solver. [Default value: 0.95][0, 1]",
-         0.95,
-         0.0,
-         1.0);
    paraParams[EnumTraversedNodesPerSeconds] = new UG::ParaParamReal(
          "EnumTraversedNodesPerSeconds",
          "# of nodes in an enumeration tree that can be traversed per second. [Default value: 3.3554432e7][1.0, DBL_MAX]",
@@ -404,18 +366,6 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          "# When we generate randomize matrix, we multiplied RandomizeScale for each elements of matrix. [Default value: 1.2][1.0, DBL_MAX]",
          1.2,
          1.0,
-         DBL_MAX);
-   paraParams[EnumStartTime] = new UG::ParaParamReal(
-         "EnumStartTime",
-         "# The start time of Enum solver. Negative value means that no use of Enum solvers [Default value: -1.0][-1.0, DBL_MAX]",
-         -1.0,
-         -1.0,
-         DBL_MAX);
-   paraParams[SieveStartTime] = new UG::ParaParamReal(
-         "SieveStartTime",
-         "# The start time of Enum solver. Negative value means that no use of Enum solvers [Default value: -1.0][-1.0, DBL_MAX]",
-         -1.0,
-         -1.0,
          DBL_MAX);
    paraParams[IntervalTimeOfAssignmentTableOutput] = new UG::ParaParamReal(
          "IntervalTimeOfAssignmentTableOutput",
@@ -437,12 +387,12 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          DBL_MAX);
    paraParams[ShareVectorsInterval] = new UG::ParaParamReal(
          "ShareVectorsInterval",
-         "# An active Solver sends vectors when time elapsed from its previous notification. [Default: 1.0][0.0, DBL_MAX]",
+         "# An active Solver sends vectors when time elapsed from its previous sending. [Default: 1.0][0.0, DBL_MAX]",
          1.0,
          0.0,
          DBL_MAX);
-   paraParams[IntervalTimeOfOutputSimilarityOfBasis] = new UG::ParaParamReal(
-         "IntervalTimeOfOutputSimilarityOfBasis",
+   paraParams[IntervalTimeOfLogSimilarityOfBasis] = new UG::ParaParamReal(
+         "IntervalTimeOfLogSimilarityOfBasis",
          "# Interval time to output the similarity of basis whose each solver. [Default: 600.0][0.0, DBL_MAX]",
          600.0,
          0.0,
@@ -475,9 +425,9 @@ CMapLapParaParamSet::CMapLapParaParamSet(
    ///
    /// string params
    ///
-   paraParams[CMapLapParamFilePath] = new UG::ParaParamString(
-         "CMapLapParamFilePath",
-         "# CMapLap parameter settings file name. Empty name use default settings. [Default: ]",
+   paraParams[LaptoolsParamFilePath] = new UG::ParaParamString(
+         "LaptoolsParamFilePath",
+         "# Laptools parameter settings file name. Empty name use default settings. [Default: ]",
          "");
 
 }
@@ -494,14 +444,14 @@ CMapLapParaParamSet::read(
    ///
    /// check parameter consistency
    ///
-   if( (getIntParamValue(NumOfInitialDeepBkzSolvers) < 0)
+   if( (getIntParamValue(NumOfInitialBkzSolvers) < 0)
          + (getIntParamValue(NumOfInitialEnumSolvers) < 0)
          + (getIntParamValue(NumOfInitialSieveSolvers) < 0) >= 2 )
    {
       THROW_LOGICAL_ERROR7(
-            "Must not be more than two negative values among NumOfInitialDeepBkzSolvers, NumOfInitialEnumSolvers, and NumOfInitialSieveSolvers",
-            "; NumOfInitialDeepBkzSolvers = ",
-            getIntParamValue(NumOfInitialDeepBkzSolvers),
+            "Must not be more than two negative values among NumOfInitialBkzSolvers, NumOfInitialEnumSolvers, and NumOfInitialSieveSolvers",
+            "; NumOfInitialBkzSolvers = ",
+            getIntParamValue(NumOfInitialBkzSolvers),
             "; NumOfInitialEnumSolvers = ",
             getIntParamValue(NumOfInitialEnumSolvers),
             "; NumOfInitialSieveSolvers = ",

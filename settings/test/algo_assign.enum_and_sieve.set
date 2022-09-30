@@ -8,6 +8,6 @@ SolutionFilePath          = "./logs/enum_and_sieve__"
 # ------------------------------------------
 #     Base ( LC )
 # ------------------------------------------
-NumOfInitialDeepBkzSolvers = 0
+NumOfInitialBkzSolvers = 0
 NumOfInitialEnumSolvers    = -1
 NumOfInitialSieveSolvers   = 2

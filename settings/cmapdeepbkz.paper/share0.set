@@ -7,8 +7,8 @@ LogSolvingStatusFilePath  = "./logs/share0__"
 CheckpointFilePath        = "./logs/share0__"
 SolutionFilePath          = "./logs/share0__"
 StatisticsToStdout = FALSE
-OutputSimilarityOfBasis = TRUE
-IntervalTimeOfOutputSimilarityOfBasis = 60
+LogSimilarityOfBasis = TRUE
+IntervalTimeOfLogSimilarityOfBasis = 60
 NumOfSamplingForSimilarityOfBasis = 100
 
 # ------------------------------------------
@@ -25,7 +25,7 @@ TimeLimit = 3000
 NoWaitNotificationId = FALSE
 NotificationInterval = 10
 IReceiveInterval     = 1
-CMapLapParamFilePath = "./settings/laptools.ug.param"
+LaptoolsParamFilePath = "./settings/laptools.ug.param"
 
 # ------------------------------------------
 #     Base ( LC )
@@ -36,9 +36,7 @@ DimensionOfSharedLattice = 0
 # ------------------------------------------
 #     DeepBkz
 # ------------------------------------------
-# ReductionType; 1 no-communication, 2 parallel 3 recursive
-DeepBkzReductionType = 2
-DeepBkzStartBlockSize = 30
-DeepBkzEndBlockSize = 30
-DeepBkzBlockSizeInterval = 5
-RandomizeRows = -1
+BkzStartBlockSize = 30
+BkzEndBlockSize = 30
+BkzBlockSizeInterval = 5
+NumRandomizedRows = -1

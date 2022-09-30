@@ -1,5 +1,5 @@
 LogShareDataPoolAll = TRUE
 LogShareDataPoolStat = TRUE
-OutputSimilarityOfBasis = TRUE
-IntervalTimeOfOutputSimilarityOfBasis = 10
+LogSimilarityOfBasis = TRUE
+IntervalTimeOfLogSimilarityOfBasis = 10
 IntervalTimeOfLogShareDataPool = 10

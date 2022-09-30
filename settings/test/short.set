@@ -16,4 +16,4 @@ LCLowerIdleRatio = 0.3
 NotificationInterval = 1
 IReceiveInterval     = 1
 ShareVectorsInterval = 1
-CMapLapParamFilePath = "./settings/laptools.ug.param"
+LaptoolsParamFilePath = "./settings/laptools.ug.param"

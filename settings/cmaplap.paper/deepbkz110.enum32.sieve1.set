@@ -20,12 +20,12 @@ TimeLimit = 3600
 NotificationInterval = 60
 IReceiveInterval     = 1
 ShareVectorsInterval = 10
-CMapLapParamFilePath = "./settings/laptools.ug.param"
+LaptoolsParamFilePath = "./settings/laptools.ug.param"
 
 # ------------------------------------------
 #     Base ( LC )
 # ------------------------------------------
-NumOfInitialDeepBkzSolvers = 110
+NumOfInitialBkzSolvers = 110
 NumOfInitialEnumSolvers    = 32
 NumOfInitialSieveSolvers   = 1
 ShareDataPoolSize = 100000
@@ -33,14 +33,12 @@ ShareDataPoolSize = 100000
 # ------------------------------------------
 #     DeepBkz
 # ------------------------------------------
-# ReductionType; 1 no-communication, 2 parallel
-DeepBkzReductionType = 2
-DeepBkzStartBlockSize = 30
-DeepBkzEndBlockSize = 30
-DeepBkzBlockSizeInterval = 5
-RandomizeRows = -1
-DeepBkzNumOfSendVectorsToPool = 10
-DeepBkzNumOfReceiveVectorsFromPool = 1
+BkzStartBlockSize = 30
+BkzEndBlockSize = 30
+BkzBlockSizeInterval = 5
+NumRandomizedRows = -1
+BkzNumOfSendVectorsToPool = 10
+BkzNumOfReceiveVectorsFromPool = 1
 
 # ------------------------------------------
 #     Enum
