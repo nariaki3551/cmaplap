@@ -427,7 +427,7 @@ Lattice<BasisFloat, GSFloat>::sizeReduce(
       double eta
       )
 {
-   int j, q, k;
+   int j, q;
    for( j = i-1; j >= 0; j--)
    {
       if( std::abs(mu.coeff(i, j)) > eta )
