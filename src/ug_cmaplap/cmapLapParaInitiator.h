@@ -283,7 +283,7 @@ public:
    virtual void outputFinalSolverStatistics(
          std::ostream *os,
          double time,
-         double totalDeepBkzTime,
+         double totalBkzTime,
          double totalEnumTime,
          double totalSieveTime
          );

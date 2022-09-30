@@ -1024,14 +1024,14 @@ public:
    }
 
    ///
-   /// create CMapLapParaCalculationState DeepBkz object
+   /// create CMapLapParaCalculationState Bkz object
    /// @return pointer to CMapLapParaCalculationState object
    ///
    virtual UG::ParaCalculationState *createParaCalculationState(
          int          inTermState,          ///< termination status, 0: normal, -1: interrupted
          int          inThreadId,           ///< thread id
-         int          inCurrentBlockSize,   ///< current DeepBkz block size
-         int          inTour,               ///< number of DeepBkz loop
+         int          inCurrentBlockSize,   ///< current Bkz block size
+         int          inTour,               ///< number of Bkz loop
          double       inElapsedTime,        ///< elapsed time
          double       inShortestNorm,       ///< the shortest norm found
          double       inApproxFactor,       ///< approximated factor
@@ -1150,7 +1150,7 @@ public:
    }
 
    ///
-   /// create ParaNode DeepBkz object by constructor
+   /// create ParaNode Bkz object by constructor
    /// @return pointer to ParaNode object
    ///
    virtual UG::ParaTask *createParaNode(

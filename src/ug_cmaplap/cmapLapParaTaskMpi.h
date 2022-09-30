@@ -57,7 +57,7 @@ namespace ParaCMapLAP
 class CMapLapParaTaskMpi : public CMapLapParaTask
 {
 
-   int iSolverType;     ///< int solver type: 0:DeepBkz, 1:Enum, 2:Sieve, -1: not set
+   int iSolverType;     ///< int solver type: 0:Bkz, 1:Enum, 2:Sieve, -1: not set
    int nRows;           ///< number of rows of basis
    int nCols;           ///< number of cols of basis
 
@@ -65,10 +65,10 @@ class CMapLapParaTaskMpi : public CMapLapParaTask
    std::vector<int> box;
 
    ///
-   /// create DeepBkz CMapLapParaSolverStateMpi datatype
+   /// create Bkz CMapLapParaSolverStateMpi datatype
    /// @return MPI datatype for CMapLapParaSolverStateMpi
    ///
-   virtual MPI_Datatype createDatatypeDeepBkz(
+   virtual MPI_Datatype createDatatypeBkz(
          );
 
    ///
@@ -108,7 +108,7 @@ public :
    }
 
    ///
-   /// constructor of DeepBkz
+   /// constructor of Bkz
    ///
    CMapLapParaTaskMpi(
          UG::TaskId intaskId,                ///< task id
@@ -124,7 +124,7 @@ public :
          )
          : CMapLapParaTask(intaskId, inGeneratorTaskId, inEstimatedValue, inThreadId,
                           inBegin, inEnd, inBlockSize, inU, inSeed, inBasis),
-           iSolverType(static_cast<int>(DeepBkz)),
+           iSolverType(static_cast<int>(Bkz)),
            nRows(inBasis->rows()),
            nCols(inBasis->cols())
    {
@@ -194,16 +194,16 @@ public :
    {
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
       {
          return ( new
             CMapLapParaTaskMpi(taskId, generatorTaskId, estimatedValue, threadId,
-                  cmapLapParaTaskDeepBkz.begin,
-                  cmapLapParaTaskDeepBkz.end,
-                  cmapLapParaTaskDeepBkz.blocksize,
-                  cmapLapParaTaskDeepBkz.u,
-                  cmapLapParaTaskDeepBkz.seed,
-                  std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskDeepBkz.basis))
+                  cmapLapParaTaskBkz.begin,
+                  cmapLapParaTaskBkz.end,
+                  cmapLapParaTaskBkz.blocksize,
+                  cmapLapParaTaskBkz.u,
+                  cmapLapParaTaskBkz.seed,
+                  std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskBkz.basis))
                   )
             );
       }

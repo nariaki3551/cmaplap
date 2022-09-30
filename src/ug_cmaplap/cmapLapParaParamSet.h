@@ -132,7 +132,7 @@ static const int CMapLapParaParamsRealFirst           = CMapLapParaParamsLongint
 //-------------------------------------------------------------------------
 static const int LowerBoundOfNorm                     = CMapLapParaParamsRealFirst + 0;
 static const int LowerBoundOfApproxFactor             = CMapLapParaParamsRealFirst + 1;
-static const int DeepBkzTaskMaxTimeLimit              = CMapLapParaParamsRealFirst + 2;
+static const int BkzTaskMaxTimeLimit                  = CMapLapParaParamsRealFirst + 2;
 static const int EnumTaskMaxTimeLimit                 = CMapLapParaParamsRealFirst + 3;
 static const int SieveTaskMaxTimeLimit                = CMapLapParaParamsRealFirst + 4;
 static const int EnumTraversedNodesPerSeconds         = CMapLapParaParamsRealFirst + 5;

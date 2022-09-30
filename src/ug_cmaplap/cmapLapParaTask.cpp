@@ -78,23 +78,23 @@ CMapLapParaTask::write(
    assert( diffSubproblemInfo == 0 );
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
    {
-      int iSolverType = static_cast<int>(DeepBkz);
+      int iSolverType = static_cast<int>(Bkz);
       out.write(reinterpret_cast<char *>(&iSolverType), sizeof(int));
-      out.write(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.begin), sizeof(int));
-      out.write(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.end), sizeof(int));
-      out.write(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.blocksize), sizeof(int));
-      out.write(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.u), sizeof(int));
-      out.write(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.seed), sizeof(int));
+      out.write(reinterpret_cast<char *>(&cmapLapParaTaskBkz.begin), sizeof(int));
+      out.write(reinterpret_cast<char *>(&cmapLapParaTaskBkz.end), sizeof(int));
+      out.write(reinterpret_cast<char *>(&cmapLapParaTaskBkz.blocksize), sizeof(int));
+      out.write(reinterpret_cast<char *>(&cmapLapParaTaskBkz.u), sizeof(int));
+      out.write(reinterpret_cast<char *>(&cmapLapParaTaskBkz.seed), sizeof(int));
 
-      int m = cmapLapParaTaskDeepBkz.basis->rows();
-      int n = cmapLapParaTaskDeepBkz.basis->cols();
+      int m = cmapLapParaTaskBkz.basis->rows();
+      int n = cmapLapParaTaskBkz.basis->cols();
       out.write(reinterpret_cast<char *>(&m), sizeof(int));
       out.write(reinterpret_cast<char *>(&n), sizeof(int));
 
       std::vector<int> basis(m*n);
-      Eigen::Map<LatticeBasis<int>>(&basis[0], m, n) = *cmapLapParaTaskDeepBkz.basis;
+      Eigen::Map<LatticeBasis<int>>(&basis[0], m, n) = *cmapLapParaTaskBkz.basis;
       out.write(reinterpret_cast<char *>(&basis[0]), sizeof(int)*(m*n));
       break;
    }
@@ -167,8 +167,8 @@ CMapLapParaTask::read(
    in.read(reinterpret_cast<char *>(&iSolverType), sizeof(int));
    switch( iSolverType )
    {
-      case static_cast<int>(DeepBkz):
-         solverType = DeepBkz;
+      case static_cast<int>(Bkz):
+         solverType = Bkz;
          break;
       case static_cast<int>(Enum):
          solverType = Enum;
@@ -182,13 +182,13 @@ CMapLapParaTask::read(
 
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
    {
-      in.read(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.begin), sizeof(int));
-      in.read(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.end), sizeof(int));
-      in.read(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.blocksize), sizeof(int));
-      in.read(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.u), sizeof(int));
-      in.read(reinterpret_cast<char *>(&cmapLapParaTaskDeepBkz.seed), sizeof(int));
+      in.read(reinterpret_cast<char *>(&cmapLapParaTaskBkz.begin), sizeof(int));
+      in.read(reinterpret_cast<char *>(&cmapLapParaTaskBkz.end), sizeof(int));
+      in.read(reinterpret_cast<char *>(&cmapLapParaTaskBkz.blocksize), sizeof(int));
+      in.read(reinterpret_cast<char *>(&cmapLapParaTaskBkz.u), sizeof(int));
+      in.read(reinterpret_cast<char *>(&cmapLapParaTaskBkz.seed), sizeof(int));
 
       int m = 0, n = 0;
       in.read(reinterpret_cast<char *>(&m), sizeof(int));
@@ -196,7 +196,7 @@ CMapLapParaTask::read(
 
       std::vector<int> basis(m*n);
       in.read(reinterpret_cast<char *>(&basis[0]), sizeof(int)*(m*n));
-      cmapLapParaTaskDeepBkz.basis = std::make_shared<LatticeBasis<int>>(Eigen::Map<LatticeBasis<int>>(&basis[0], m, n));
+      cmapLapParaTaskBkz.basis = std::make_shared<LatticeBasis<int>>(Eigen::Map<LatticeBasis<int>>(&basis[0], m, n));
       break;
    }
    case Enum:
@@ -326,14 +326,14 @@ CMapLapParaTaskLC::receive(
    threadId          = received->threadId;
    solverType        = received->solverType;
 
-   assert( solverType == DeepBkz );
+   assert( solverType == Bkz );
 
-   cmapLapParaTaskDeepBkz.begin     = received->cmapLapParaTaskDeepBkz.begin;
-   cmapLapParaTaskDeepBkz.end       = received->cmapLapParaTaskDeepBkz.end;
-   cmapLapParaTaskDeepBkz.blocksize = received->cmapLapParaTaskDeepBkz.blocksize;
-   cmapLapParaTaskDeepBkz.u         = received->cmapLapParaTaskDeepBkz.u;
-   cmapLapParaTaskDeepBkz.seed      = received->cmapLapParaTaskDeepBkz.seed;
-   cmapLapParaTaskDeepBkz.basis     = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskDeepBkz.basis));
+   cmapLapParaTaskBkz.begin     = received->cmapLapParaTaskBkz.begin;
+   cmapLapParaTaskBkz.end       = received->cmapLapParaTaskBkz.end;
+   cmapLapParaTaskBkz.blocksize = received->cmapLapParaTaskBkz.blocksize;
+   cmapLapParaTaskBkz.u         = received->cmapLapParaTaskBkz.u;
+   cmapLapParaTaskBkz.seed      = received->cmapLapParaTaskBkz.seed;
+   cmapLapParaTaskBkz.basis     = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskBkz.basis));
 
    return 0;
 }

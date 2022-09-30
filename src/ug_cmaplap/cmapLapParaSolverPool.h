@@ -59,7 +59,7 @@ namespace ParaCMapLAP { class CMapLapParaSolverPoolElement; }
 namespace ParaCMapLAP
 {
 
-struct DeepBkzSolverPoolElementData {
+struct BkzSolverPoolElementData {
    double   enumCost;           ///< approximated time of full Enum [Pool] better a than b when a < b
    double   slopeGSA;           ///< slope of GSA line [Pool] better a than b when a > b
    double   topHalfSlopeGSA;    ///< slope of top-half GSA line [Pool] better a than b when a > b
@@ -75,7 +75,7 @@ struct SievingSolverPoolElementData {
 };                              ///< data that are used for Sieving Solver
 
 union SolverPoolElementData {
-   DeepBkzSolverPoolElementData deepBzkSolverData; ///< data for CMapLap solver
+   BkzSolverPoolElementData deepBzkSolverData; ///< data for CMapLap solver
    EnumSolverPoolElementData    enumSolverData;    ///< data for Enum Solver
    SievingSolverPoolElementData sievingSolverData; ///< data for Sieving solver
 };                                                 ///< union data type for data that are depending on solver type
@@ -218,7 +218,7 @@ public :
       currentTask = inTask;
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
          interruptPriorityValue = -(inTask->getEstimatedValue());
          solverPoolElementData.deepBzkSolverData.enumCost = inTask->getEstimatedValue();
          solverPoolElementData.deepBzkSolverData.slopeGSA = 0.0;
@@ -329,7 +329,7 @@ public :
    virtual double getEnumCost(
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return solverPoolElementData.deepBzkSolverData.enumCost;
    }
 
@@ -340,7 +340,7 @@ public :
    virtual double getSlopeGSA(
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return solverPoolElementData.deepBzkSolverData.slopeGSA;
    }
 
@@ -351,7 +351,7 @@ public :
    virtual double getTopHalfSlopeGSA(
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return solverPoolElementData.deepBzkSolverData.topHalfSlopeGSA;
    }
 
@@ -362,7 +362,7 @@ public :
    virtual double getOrthogonalFactor(
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return solverPoolElementData.deepBzkSolverData.orthogonalFactor;
    }
 
@@ -372,14 +372,14 @@ public :
    virtual std::shared_ptr<LatticeBasis<int>> getBasis(
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return currentTask->getBasis();
    }
 
    ///
-   /// update DeepBkz solver data
+   /// update Bkz solver data
    ///
-   virtual void updateDeepBkzSolverData(
+   virtual void updateBkzSolverData(
          int      inBlockSize,            ///< current blocksize
          int*     inBasis,                 ///<
          double   inEnumCost,             ///< approximated time of full Enum [Pool] better a than b when a < b
@@ -388,9 +388,9 @@ public :
          double   inOrthogonalFactor      ///< orthogonal factor [Pool] better a than b when a < b
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       interruptPriorityValue = -inEnumCost;
-      currentTask->updateDeepBkz(inBlockSize, inBasis);
+      currentTask->updateBkz(inBlockSize, inBasis);
       solverPoolElementData.deepBzkSolverData.enumCost = inEnumCost;
       solverPoolElementData.deepBzkSolverData.slopeGSA = inSlopeGSA;
       solverPoolElementData.deepBzkSolverData.topHalfSlopeGSA = inTopHalfSlopeGSA;
@@ -655,21 +655,21 @@ class CMapLapParaSolverPool : public UG::ParaSolverPool
 
 protected:
 
-   unsigned int                     nThreadsPerRank;              ///< maximum number of threads in a solver process
-   long                             nDeepBkzTasks;                ///< total number of DeepBkz tasks assigned
-   long                             nEnumTasks;                   ///< total number of Enum tasks assigned
-   long                             nSieveTasks;                  ///< total number of Sieve tasks assinged
-   InActiveSolvers                  inactiveSolvers;              ///< pointers to inactive Solvers
-   ActiveSolvers                    activeDeepBkzSolvers;         ///< pointers to active DeepBkz Solvers
-   InterruptingSolvers              interruptingDeepBkzSolvers;   ///< pointers to interruupting DeepBkz Solvers
-   ActiveSolvers                    activeEnumSolvers;            ///< pointers to active Enum Solvers
-   InterruptingSolvers              interruptingEnumSolvers;      ///< pointers to interruupting Enum Solvers
-   ActiveSolvers                    activeSieveSolvers;           ///< pointers to active Sieve Solvers
-   InterruptingSolvers              interruptingSieveSolvers;     ///< pointers to interruupting Sieve Solvers
-   CMapLapParaSolverPoolElementPtr  *pool;                        ///< Solver pool indexed by Solver's rank
-   AscendingSelectionHeap           *deepBkzSelectionHeap;        ///< pointers to active deepBkz Solvers in ascending order
-   AscendingSelectionHeap           *enumSelectionHeap;           ///< pointers to active enum Solvers in ascending order
-   AscendingSelectionHeap           *sieveSelectionHeap;          ///< pointers to active enum Solvers in ascending order
+   unsigned int                     nThreadsPerRank;           ///< maximum number of threads in a solver process
+   long                             nBkzTasks;                 ///< total number of Bkz tasks assigned
+   long                             nEnumTasks;                ///< total number of Enum tasks assigned
+   long                             nSieveTasks;               ///< total number of Sieve tasks assinged
+   InActiveSolvers                  inactiveSolvers;           ///< pointers to inactive Solvers
+   ActiveSolvers                    activeBkzSolvers;          ///< pointers to active Bkz Solvers
+   InterruptingSolvers              interruptingBkzSolvers;    ///< pointers to interruupting Bkz Solvers
+   ActiveSolvers                    activeEnumSolvers;         ///< pointers to active Enum Solvers
+   InterruptingSolvers              interruptingEnumSolvers;   ///< pointers to interruupting Enum Solvers
+   ActiveSolvers                    activeSieveSolvers;        ///< pointers to active Sieve Solvers
+   InterruptingSolvers              interruptingSieveSolvers;  ///< pointers to interruupting Sieve Solvers
+   CMapLapParaSolverPoolElementPtr  *pool;                     ///< Solver pool indexed by Solver's rank
+   AscendingSelectionHeap           *deepBkzSelectionHeap;     ///< pointers to active deepBkz Solvers in ascending order
+   AscendingSelectionHeap           *enumSelectionHeap;        ///< pointers to active enum Solvers in ascending order
+   AscendingSelectionHeap           *sieveSelectionHeap;       ///< pointers to active enum Solvers in ascending order
 
 public:
 
@@ -684,7 +684,7 @@ public:
          int inNThreadsPerRank               ///< maximum number of threads in a solver process
          ) : ParaSolverPool(inOriginRank, inParaComm, inParaParams, inParaTimer),
              nThreadsPerRank(inNThreadsPerRank),
-             nDeepBkzTasks(0),
+             nBkzTasks(0),
              nEnumTasks(0),
              nSieveTasks(0)
    {
@@ -754,23 +754,23 @@ public:
    }
 
    ///
-   ///  get number of DeepBkz solver tasks
-   ///  @return number of DeepBkz solver tasks
+   ///  get number of Bkz solver tasks
+   ///  @return number of Bkz solver tasks
    ///
-   virtual long getNDeepBkzTasks(
+   virtual long getNBkzTasks(
          )
    {
-      return nDeepBkzTasks;
+      return nBkzTasks;
    }
 
    ///
-   ///  add number of DeepBkz solver tasks
+   ///  add number of Bkz solver tasks
    ///
-   virtual void addNDeepBkzTasks(
+   virtual void addNBkzTasks(
          int n       ///< number of new tasks
          )
    {
-      nDeepBkzTasks += n;
+      nBkzTasks += n;
    }
 
    ///
@@ -811,7 +811,7 @@ public:
    virtual std::size_t getNumActiveSolvers(
          )
    {
-      return (getNumActiveDeepBkzSolvers() + getNumActiveEnumSolvers() + getNumActiveSieveSolvers());
+      return (getNumActiveBkzSolvers() + getNumActiveEnumSolvers() + getNumActiveSieveSolvers());
    }
 
    ///
@@ -847,13 +847,13 @@ public:
 
 
    ///
-   /// get number of active DeepBkz Solvers
-   /// @return number of active DeepBkz Solvers
+   /// get number of active Bkz Solvers
+   /// @return number of active Bkz Solvers
    ///
-   virtual std::size_t getNumActiveDeepBkzSolvers(
+   virtual std::size_t getNumActiveBkzSolvers(
          )
    {
-      return activeDeepBkzSolvers.size() + interruptingDeepBkzSolvers.size();
+      return activeBkzSolvers.size() + interruptingBkzSolvers.size();
    }
 
    ///
@@ -1081,11 +1081,11 @@ public:
          );
 
    ///
-   /// get interrupt DeepBkz solver
-   /// @return interrupt DeepBkz solver rank, -1 is reserved for Sieve
+   /// get interrupt Bkz solver
+   /// @return interrupt Bkz solver rank, -1 is reserved for Sieve
    ///
-   virtual int getInterruptDeepBkzSolver(
-         int &threadId           ///< interrupt DeepBkz solver thread id (return value)
+   virtual int getInterruptBkzSolver(
+         int &threadId           ///< interrupt Bkz solver thread id (return value)
          );
 
    ///
@@ -1097,9 +1097,9 @@ public:
          );
 
    ///
-   /// interrupt DeepBkz Solvers
+   /// interrupt Bkz Solvers
    ///
-   virtual void interruptDeepBkzSolvers(
+   virtual void interruptBkzSolvers(
          int nInterrupt     ///< number of interrupt solvers
          );
 
@@ -1111,24 +1111,24 @@ public:
          );
 
    ///
-   /// interrupt DeepBkz and Enum Solvers to run a Sieve Solver
+   /// interrupt Bkz and Enum Solvers to run a Sieve Solver
    ///
-   virtual bool interruptDeepBkzAndEnumSolversToRunSieveSolver(
+   virtual bool interruptBkzAndEnumSolversToRunSieveSolver(
          );
 
    ///
-   /// interrupt DeepBkz and Enum Solvers to run a Sieve Solver
+   /// interrupt Bkz and Enum Solvers to run a Sieve Solver
    ///
-   virtual bool interruptEnumAndDeepBkzSolversToRunSieveSolver(
+   virtual bool interruptEnumAndBkzSolversToRunSieveSolver(
          );
 
    ///
    /// check if interrupting solver exists
    ///
-   virtual bool isThereInterruptingDeepBkzSolver(
+   virtual bool isThereInterruptingBkzSolver(
          )
    {
-      return ( interruptingDeepBkzSolvers.size() > 0 );
+      return ( interruptingBkzSolvers.size() > 0 );
    }
 
    ///
@@ -1158,7 +1158,7 @@ public:
          );
 
    ///
-   /// update DeepBkz Solver status
+   /// update Bkz Solver status
    ///
    virtual void updateSolverStatus(
          int      rank,                ///< rank of the Solver
@@ -1208,7 +1208,7 @@ public:
          );
 
    ///
-   /// get basis of DeepBkz Solvers
+   /// get basis of Bkz Solvers
    /// @return deque of basis(Eigen::LatticeBasis<int>)
    ///
    virtual std::deque<std::shared_ptr<LatticeBasis<int>>> getBasisOfSolvers(

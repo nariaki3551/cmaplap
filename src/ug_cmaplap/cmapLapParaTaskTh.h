@@ -86,7 +86,7 @@ public :
    }
 
    ///
-   /// constructor DeepBkz
+   /// constructor Bkz
    ///
    CMapLapParaTaskTh(
          UG::TaskId inTaskId,                ///< node id
@@ -161,15 +161,15 @@ public :
    {
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
          return ( new
             CMapLapParaTaskTh(taskId, generatorTaskId, estimatedValue, threadId,
-                  cmapLapParaTaskDeepBkz.begin,
-                  cmapLapParaTaskDeepBkz.end,
-                  cmapLapParaTaskDeepBkz.blocksize,
-                  cmapLapParaTaskDeepBkz.u,
-                  cmapLapParaTaskDeepBkz.seed,
-                  std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskDeepBkz.basis))
+                  cmapLapParaTaskBkz.begin,
+                  cmapLapParaTaskBkz.end,
+                  cmapLapParaTaskBkz.blocksize,
+                  cmapLapParaTaskBkz.u,
+                  cmapLapParaTaskBkz.seed,
+                  std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskBkz.basis))
                   )
             );
       case Enum:

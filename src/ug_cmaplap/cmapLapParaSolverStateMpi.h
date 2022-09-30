@@ -56,14 +56,14 @@ namespace ParaCMapLAP
 class CMapLapParaSolverStateMpi : public CMapLapParaSolverState
 {
 
-   int iSolverType;          ///< int solver type: 0:DeepBkz, 1:Enum, 2:Sieve, -1: not set
+   int iSolverType;          ///< int solver type: 0:Bkz, 1:Enum, 2:Sieve, -1: not set
    int typeAndDim[3];
 
    ///
-   /// create DeepBkz CMapLapParaSolverStateMpi datatype
+   /// create Bkz CMapLapParaSolverStateMpi datatype
    /// @return MPI datatype for CMapLapParaSolverStateMpi
    ///
-   virtual MPI_Datatype createDatatypeDeepBkz(
+   virtual MPI_Datatype createDatatypeBkz(
          );
 
    ///
@@ -92,7 +92,7 @@ public:
    }
 
    ///
-   /// constructor DeepBkz
+   /// constructor Bkz
    ///
    CMapLapParaSolverStateMpi(
          unsigned int  inNotificationId,        ///< id for this notification
@@ -105,8 +105,8 @@ public:
          int           inMeanMessageQueueSize,  ///< mean of the message queue size
          int           inMaxMessageQueueSize,   ///< max of the message queue size
          int*          inBasis,                 ///< 1-dimension array of lattice basis row major
-         int           inCurrentBlockSize,      ///< current DeepBkz block size
-         int           inTour,                  ///< number of DeepBkz loop
+         int           inCurrentBlockSize,      ///< current Bkz block size
+         int           inTour,                  ///< number of Bkz loop
          double        inElapsedTime,           ///< elapsed time
          double        inShortestNorm,          ///< the shortest norm found
          double        inApproxFactor,          ///< approximated factor
@@ -141,7 +141,7 @@ public:
                                  inTopHalfSlopeGSA,
                                  inOrthogonalFactor
                                  ),
-            iSolverType(static_cast<int>(DeepBkz))
+            iSolverType(static_cast<int>(Bkz))
    {
    }
 

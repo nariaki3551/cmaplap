@@ -49,10 +49,10 @@
 namespace ParaCMapLAP
 {
 
-struct CMapLapParaSolverStateDeepBkz {
+struct CMapLapParaSolverStateBkz {
    int*     basis;                  ///< 1-dimension array of lattice basis row major
-   int      currentBlockSize;       ///< current DeepBkz block size
-   int      tour;                   ///< number of DeepBkz loop
+   int      currentBlockSize;       ///< current Bkz block size
+   int      tour;                   ///< number of Bkz loop
    double   elapsedTime;            ///< elapsed time
    double   shortestNorm;           ///< the shortest norm found
    double   approxFactor;           ///< approximate factor
@@ -93,7 +93,7 @@ struct CMapLapParaSolverStateSieve {
 };
 
 union CMapLapParaSolverStateData {
-   CMapLapParaSolverStateDeepBkz cmapLapParaSolverStateDeepBkz;
+   CMapLapParaSolverStateBkz     cmapLapParaSolverStateBkz;
    CMapLapParaSolverStateEnum    cmapLapParaSolverStateEnum;
    CMapLapParaSolverStateSieve   cmapLapParaSolverStateSieve;
 };
@@ -146,7 +146,7 @@ public:
    }
 
    ///
-   /// Constructor of DeepBkz
+   /// Constructor of Bkz
    ///
    CMapLapParaSolverState(
          unsigned int  inNotificationId,        ///< id for this notification
@@ -159,8 +159,8 @@ public:
          int           inMeanMessageQueueSize,  ///< mean of the message queue size
          int           inMaxMessageQueueSize,   ///< max of the message queue size
          int*          inBasis,                 ///< 1-dimension array
-         int           inCurrentBlockSize,      ///< current DeepBkz block size
-         int           inTour,                  ///< number of DeepBkz loop
+         int           inCurrentBlockSize,      ///< current Bkz block size
+         int           inTour,                  ///< number of Bkz loop
          double        inElapsedTime,           ///< elapsed time
          double        inShortestNorm,          ///< the shortest norm found
          double        inApproxFactor,          ///< approximated factor
@@ -174,26 +174,26 @@ public:
          )
          : UG::ParaSolverState(0, inNotificationId, inLcId, inGlobalSubtreeId, inDetTime),
            threadId(inThreadId),
-           solverType(DeepBkz),
+           solverType(Bkz),
            dimension(inDimension),
            basisRows(inBasisRows),
            meanMessageQueueSize(inMeanMessageQueueSize),
            maxMessageQueueSize(inMaxMessageQueueSize)
    {
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis = inBasis;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize = inCurrentBlockSize;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour = inTour;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime = inElapsedTime;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm = inShortestNorm;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor = inApproxFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor = inHermiteFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor = inRootHermiteFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost = inEnumCost;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCostGH = inEnumCostGH;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA = inSlopeGSA;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA = inTopHalfSlopeGSA;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor = inOrthogonalFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.nNotChangeRows = -1;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis = inBasis;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize = inCurrentBlockSize;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour = inTour;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime = inElapsedTime;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm = inShortestNorm;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor = inApproxFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor = inHermiteFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor = inRootHermiteFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost = inEnumCost;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCostGH = inEnumCostGH;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA = inSlopeGSA;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA = inTopHalfSlopeGSA;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor = inOrthogonalFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.nNotChangeRows = -1;
    }
 
    ///
@@ -291,10 +291,10 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         if( cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis )
+      case Bkz:
+         if( cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis )
          {
-            delete[] cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis;
+            delete[] cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis;
          }
          break;
       case Enum:
@@ -371,8 +371,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime;
+      case Bkz:
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime;
       case Enum:
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.elapsedTime;
       case Sieve:
@@ -389,8 +389,8 @@ public:
    virtual int* getBasis(
          )
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis;
+      assert( solverType == Bkz );
+      return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis;
    }
 
    ///
@@ -400,10 +400,10 @@ public:
    virtual int getCurrentBlockSize(
          )
    {
-      assert( solverType == DeepBkz || solverType == Sieve );
-      if( solverType == DeepBkz )
+      assert( solverType == Bkz || solverType == Sieve );
+      if( solverType == Bkz )
       {
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize;
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize;
       }
       if( solverType == Sieve )
       {
@@ -419,8 +419,8 @@ public:
    virtual int getCurrentTour(
          )
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour;
+      assert( solverType == Bkz );
+      return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour;
    }
 
    ///
@@ -432,8 +432,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm;
+      case Bkz:
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm;
       case Enum:
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.shortestNorm;
       case Sieve:
@@ -452,8 +452,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor;
+      case Bkz:
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor;
       case Enum:
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.approxFactor;
       case Sieve:
@@ -472,8 +472,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor;
+      case Bkz:
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor;
       case Enum:
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.hermiteFactor;
       case Sieve:
@@ -492,8 +492,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor;
+      case Bkz:
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor;
       case Enum:
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.rootHermiteFactor;
       case Sieve:
@@ -510,9 +510,9 @@ public:
    virtual double getEnumCost(
          )
    {
-      assert( solverType == DeepBkz || solverType == Enum );
-      if( solverType == DeepBkz )
-         return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost;
+      assert( solverType == Bkz || solverType == Enum );
+      if( solverType == Bkz )
+         return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost;
       else
          return cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.enumCost;
    }
@@ -524,8 +524,8 @@ public:
    virtual double getSlopeGSA(
          )
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA;
+      assert( solverType == Bkz );
+      return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA;
    }
 
    ///
@@ -535,8 +535,8 @@ public:
    virtual double getTopHalfSlopeGSA(
          )
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA;
+      assert( solverType == Bkz );
+      return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA;
    }
 
    ///
@@ -546,8 +546,8 @@ public:
    virtual double getOrthogonalFactor(
          )
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor;
+      assert( solverType == Bkz );
+      return cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor;
    }
 
    ///
@@ -712,8 +712,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return std::pow(cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm, 2);
+      case Bkz:
+         return std::pow(cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm, 2);
          break;
       case Enum:
          return std::pow(cmapLapParaSolverStateData.cmapLapParaSolverStateEnum.shortestNorm, 2);
@@ -733,8 +733,8 @@ public:
          int nNotChangeRows
          )
    {
-      assert( solverType == DeepBkz );
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.nNotChangeRows = nNotChangeRows;
+      assert( solverType == Bkz );
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.nNotChangeRows = nNotChangeRows;
    }
 
    ///
@@ -760,8 +760,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return toStringLogDeepBkz(delimiter);
+      case Bkz:
+         return toStringLogBkz(delimiter);
       case Enum:
          return toStringLogEnum(delimiter);
       case Sieve:
@@ -773,30 +773,30 @@ public:
 
    ///
    /// stringfy CMapLapParaSolverStateData
-   /// @return string to show inside of CMapLapParaSolverStateDeepBkz
+   /// @return string to show inside of CMapLapParaSolverStateBkz
    ///
-   virtual const std::string toStringLogDeepBkz(
+   virtual const std::string toStringLogBkz(
          std::string delimiter=""
          )
    {
-      std::string taskName       = "DeepBkz";
-      double   elapsedTime       = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime;
-      int      size              = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize;
-      long int iter              = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour;
+      std::string taskName       = "Bkz";
+      double   elapsedTime       = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime;
+      int      size              = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize;
+      long int iter              = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour;
       double   progress          = 0.0;
-      double   leftTime          = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCostGH;
-      double   logCost           = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost;
-      double   shortestNorm      = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm;
-      double   approxFactor      = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor;
-      double   hermiteFactor     = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor;
-      double   rootHermiteFactor = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor;
-      double   orthogonalFactor  = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor;
-      int      nNotChangeRows    = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.nNotChangeRows;
+      double   leftTime          = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCostGH;
+      double   logCost           = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost;
+      double   shortestNorm      = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm;
+      double   approxFactor      = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor;
+      double   hermiteFactor     = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor;
+      double   rootHermiteFactor = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor;
+      double   orthogonalFactor  = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor;
+      int      nNotChangeRows    = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.nNotChangeRows;
       std::ostringstream s_appendix;
       s_appendix << " -- rho " << std::fixed << std::setprecision(5)
-                 << cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA
+                 << cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA
                  << ", half rho " << std::fixed << std::setprecision(5)
-                 << cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA;
+                 << cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA;
       s_appendix << ", not_change " << nNotChangeRows
                  << ", Mean " << meanMessageQueueSize;
                  // << ", Max "  << maxMessageQueueSize;

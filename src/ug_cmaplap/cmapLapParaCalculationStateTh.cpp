@@ -46,22 +46,22 @@ CMapLapParaCalculationStateTh::createDatatype(
 {
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
       return new CMapLapParaCalculationStateTh(
             terminationState,
             threadId,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.currentBlockSize,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.tour,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.currentBlockSize,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.tour,
             compTime,  // elapsedTime
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.shortestNorm,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.approxFactor,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.hermiteFactor,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.rootHermiteFactor,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCost,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCostGH,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.slopeGSA,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.topHalfSlopeGSA,
-            cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.orthogonalFactor
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.shortestNorm,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.approxFactor,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.hermiteFactor,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.rootHermiteFactor,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCost,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCostGH,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.slopeGSA,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.topHalfSlopeGSA,
+            cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.orthogonalFactor
             );
    case Enum:
       return new CMapLapParaCalculationStateTh(

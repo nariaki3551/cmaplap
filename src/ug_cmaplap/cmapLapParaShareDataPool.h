@@ -398,7 +398,7 @@ public:
          *os << p->squaredNorm() << "(" << static_cast<int>(p->getSolverType()) << ") ";
       }
       // *os << "; ";
-      // *os << solverTypeConter[static_cast<int>(DeepBkz)] << " "
+      // *os << solverTypeConter[static_cast<int>(Bkz)] << " "
       //     << solverTypeConter[static_cast<int>(Enum)]    << " "
       //     << solverTypeConter[static_cast<int>(Sieve)]   << " "
       //     << solverTypeConter[static_cast<int>(Undefined)];

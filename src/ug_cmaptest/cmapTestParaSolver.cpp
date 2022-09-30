@@ -70,10 +70,10 @@ CMapTestParaSolver::solve(
    double startElapsedTime = paraTimer->getElapsedTime();
    switch ( getSolverType() )
    {
-      case DeepBkz:
-         nParaTasksDeepBkzReceived++;
-         runDeepBkz();
-         runningTimeDeepBkz += paraTimer->getElapsedTime() - startElapsedTime;
+      case Bkz:
+         nParaTasksBkzReceived++;
+         runBkz();
+         runningTimeBkz += paraTimer->getElapsedTime() - startElapsedTime;
          break;
       case Enum:
          nParaTasksEnumReceived++;
@@ -92,10 +92,10 @@ CMapTestParaSolver::solve(
 
 
 ///
-/// run CMAP-LAP Randomized DeepBkz
+/// run CMAP-LAP Randomized Bkz
 ///
 void
-CMapTestParaSolver::runDeepBkz(
+CMapTestParaSolver::runBkz(
       )
 {
    CMapLapParaTask *cmapLapParaTask = dynamic_cast<CMapLapParaTask *>(currentTask);
@@ -136,7 +136,7 @@ CMapTestParaSolver::runDeepBkz(
    // Notification message has to complete
    if( notificationProcessed ){ waitNotificationIdMessage(); }
 
-   sendDeepBkzCalculationState(
+   sendBkzCalculationState(
          L->basis,
          blocksize,
          reductionObj.getNTour(),

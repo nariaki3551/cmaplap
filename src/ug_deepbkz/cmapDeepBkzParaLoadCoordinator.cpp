@@ -127,7 +127,7 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
    }
 
    SolverType solverType = solverState->getSolverType();
-   if( solverType != DeepBkz )
+   if( solverType != Bkz )
    {
       THROW_LOGICAL_ERROR2("CMapDeepBkzParaLoadCoordinator::activateSolver: Invalid solver type = ",static_cast<int>(solverType));
    }
@@ -137,7 +137,7 @@ CMapDeepBkzParaLoadCoordinator::processTagSolverState(
    LatticeBasis<int> basis;
 
    // get basis
-   if( solverType == DeepBkz )
+   if( solverType == Bkz )
    {
       std::shared_ptr<LatticeBasis<int>> prevBasis = getCmapLapParaSolverPool()->getBasis(
             source,

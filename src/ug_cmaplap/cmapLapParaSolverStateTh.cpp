@@ -59,7 +59,7 @@ CMapLapParaSolverStateTh::createDatatype(
 {
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
    {
       int *basis = 0;
       if( dimension * basisRows > 0 )
@@ -67,7 +67,7 @@ CMapLapParaSolverStateTh::createDatatype(
          basis = new int [ dimension * basisRows ];
          for( int i = 0; i < dimension * basisRows; i++ )
          {
-            basis[i] = cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis[i];
+            basis[i] = cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis[i];
          }
       }
       return new CMapLapParaSolverStateTh(
@@ -81,18 +81,18 @@ CMapLapParaSolverStateTh::createDatatype(
             meanMessageQueueSize,
             maxMessageQueueSize,
             basis,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCostGH,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA,
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCostGH,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA,
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor
             );
    }
    case Enum:
@@ -209,32 +209,32 @@ CMapLapParaSolverStateTh::receive(
 
    switch( received->solverType )
    {
-   case DeepBkz:
-      solverType = DeepBkz;
+   case Bkz:
+      solverType = Bkz;
       if( dimension * basisRows > 0 )
       {
-         cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis = new int [ dimension * basisRows ];
+         cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis = new int [ dimension * basisRows ];
          for( int i = 0; i < dimension * basisRows; i++ )
          {
-            cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis[i] = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis[i];
+            cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis[i] = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis[i];
          }
       }
       else
       {
-         cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.basis = 0;  // empty basis
+         cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.basis = 0;  // empty basis
       }
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize  = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.currentBlockSize;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour              = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.tour;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime       = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.elapsedTime;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm      = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.shortestNorm;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor      = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.approxFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor     = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.hermiteFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.rootHermiteFactor;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost          = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCost;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCostGH        = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.enumCostGH;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA          = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.slopeGSA;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA   = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.topHalfSlopeGSA;
-      cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor  = received->cmapLapParaSolverStateData.cmapLapParaSolverStateDeepBkz.orthogonalFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize  = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.currentBlockSize;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour              = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.tour;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime       = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.elapsedTime;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm      = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.shortestNorm;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor      = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.approxFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor     = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.hermiteFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.rootHermiteFactor;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost          = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCost;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCostGH        = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.enumCostGH;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA          = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.slopeGSA;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA   = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.topHalfSlopeGSA;
+      cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor  = received->cmapLapParaSolverStateData.cmapLapParaSolverStateBkz.orthogonalFactor;
       break;
    case Enum:
       solverType = Enum;

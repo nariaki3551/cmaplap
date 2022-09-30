@@ -166,7 +166,7 @@ CMapLapParaSolverTerminationStateMpi::createDatatype(){
    displacements[17] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &nParaTasksDeepBkzReceived, &address )
+      MPI_Get_address( &nParaTasksBkzReceived, &address )
    );
    displacements[18] = address - startAddress;
 
@@ -181,7 +181,7 @@ CMapLapParaSolverTerminationStateMpi::createDatatype(){
    displacements[20] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &runningTimeDeepBkz, &address )
+      MPI_Get_address( &runningTimeBkz, &address )
    );
    displacements[21] = address - startAddress;
    types[21] = MPI_DOUBLE;
@@ -199,7 +199,7 @@ CMapLapParaSolverTerminationStateMpi::createDatatype(){
    types[23] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &nVectorsReceivedDeepBkz, &address )
+      MPI_Get_address( &nVectorsReceivedBkz, &address )
    );
    displacements[24] = address - startAddress;
 
@@ -214,7 +214,7 @@ CMapLapParaSolverTerminationStateMpi::createDatatype(){
    displacements[26] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &nVectorsSentDeepBkz, &address )
+      MPI_Get_address( &nVectorsSentBkz, &address )
    );
    displacements[27] = address - startAddress;
 
@@ -229,7 +229,7 @@ CMapLapParaSolverTerminationStateMpi::createDatatype(){
    displacements[29] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &nBasesSentDeepBkz, &address )
+      MPI_Get_address( &nBasesSentBkz, &address )
    );
    displacements[30] = address - startAddress;
 

@@ -161,7 +161,7 @@ CMapLapParaLoadCoordinator::CMapLapParaLoadCoordinator(
    ///
    paraSolverPool = new CMapLapParaSolverPool(1, inComm, inParaParamSet, inParaTimer, nThreadsPerRank );
    cmapLapParaSolverPool = dynamic_cast<CMapLapParaSolverPool *>(paraSolverPool);
-   paraDeepBkzTaskPool = std::make_shared<CMapLapParaTaskPoolInAscendingOrder>();
+   paraBkzTaskPool = std::make_shared<CMapLapParaTaskPoolInAscendingOrder>();
    paraEnumTaskPool = std::make_shared<CMapLapParaTaskPoolInAscendingOrder>();
    paraSieveTaskPool = std::make_shared<CMapLapParaTaskPoolInAscendingOrder>();
    shareDataPool = std::make_shared<ShareDataPool>(paraParams->getIntParamValue(ShareDataPoolSize));
@@ -649,15 +649,15 @@ CMapLapParaLoadCoordinator::processLocalTagSolution(
          incrementNStatus();
 
          // output log like solver state log
-         assert( cmapLapParaSolverPool->getSolverType(source,0) == DeepBkz );
+         assert( cmapLapParaSolverPool->getSolverType(source,0) == Bkz );
          int inSource = 0;
          int inThreadId = sol->getThreadId();
          double shortestNorm = std::sqrt(sol->getObjectiveFunctionValue());
          *osLogSolvingStatus
-            << Logging::getSolverStateString('*', paraTimer->getElapsedTime(), inSource, inThreadId, DeepBkz, shortestNorm)
+            << Logging::getSolverStateString('*', paraTimer->getElapsedTime(), inSource, inThreadId, Bkz, shortestNorm)
             << std::endl;
          *osCsvLogSolvingStatus
-            << Logging::getSolverStateString('*', paraTimer->getElapsedTime(), inSource, inThreadId, DeepBkz, shortestNorm, ",")
+            << Logging::getSolverStateString('*', paraTimer->getElapsedTime(), inSource, inThreadId, Bkz, shortestNorm, ",")
             << std::endl;
       }
       outputAssignmentTable('*');
@@ -827,7 +827,7 @@ CMapLapParaLoadCoordinator::processTagSolverState(
    LatticeBasis<int> basis;
 
    // get basis
-   if( solverType == DeepBkz )
+   if( solverType == Bkz )
    {
       std::shared_ptr<LatticeBasis<int>> prevBasis = cmapLapParaSolverPool->getBasis(
             source,
@@ -857,7 +857,7 @@ CMapLapParaLoadCoordinator::processTagSolverState(
    // update solver state
    switch( solverType )
    {
-      case DeepBkz:
+      case Bkz:
       {
          cmapLapParaSolverPool->updateSolverStatus(
                source,
@@ -970,8 +970,8 @@ CMapLapParaLoadCoordinator::processTagCompletionOfCalculation(
 
    switch( calcState->getSolverType() )
    {
-   case DeepBkz:
-      cmapLapParaSolverPool->inactivateSolver(source, calcState->getThreadId(), paraDeepBkzTaskPool);
+   case Bkz:
+      cmapLapParaSolverPool->inactivateSolver(source, calcState->getThreadId(), paraBkzTaskPool);
       break;
    case Enum:
       cmapLapParaSolverPool->inactivateSolver(source, calcState->getThreadId(), paraEnumTaskPool);
@@ -1196,8 +1196,8 @@ CMapLapParaLoadCoordinator::outputAssignmentTable(
       }
       *osAssignmentTable << std::setw(10) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumInactiveSolvers();
       *osAssignmentTable << std::setw(13) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumActiveSolvers();
-      *osAssignmentTable << std::setw(9) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumActiveDeepBkzSolvers()
-                         << "(+" << ( (paraLocalSolverPool) ? paraLocalSolverPool->getNumActiveDeepBkzSolvers() : 0 ) << ")";
+      *osAssignmentTable << std::setw(9) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumActiveBkzSolvers()
+                         << "(+" << ( (paraLocalSolverPool) ? paraLocalSolverPool->getNumActiveBkzSolvers() : 0 ) << ")";
       *osAssignmentTable << std::setw(9) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumActiveEnumSolvers()
                          << "(+" << ( (paraLocalSolverPool) ? paraLocalSolverPool->getNumActiveEnumSolvers() : 0 ) << ")";
       *osAssignmentTable << std::setw(10) << std::right << std::setprecision(0) << std::fixed << cmapLapParaSolverPool->getNumActiveSieveSolvers()
@@ -1209,9 +1209,9 @@ CMapLapParaLoadCoordinator::outputAssignmentTable(
          else if( paraLocalTaskPool->getNumOfTasks() >= 100 )  nTaskSetw -= 2;
          else if( paraLocalTaskPool->getNumOfTasks() >= 1000 ) nTaskSetw -= 3;
       }
-      // number of tatsks ( DeepBkz + Enum ( Local Task ) )
+      // number of tatsks ( Bkz + Enum ( Local Task ) )
       *osAssignmentTable << std::setw(nTaskSetw)  << std::right << std::setprecision(0) << std::fixed
-         << paraDeepBkzTaskPool->getNumOfTasks() + paraEnumTaskPool->getNumOfTasks() + paraSieveTaskPool->getNumOfTasks()
+         << paraBkzTaskPool->getNumOfTasks() + paraEnumTaskPool->getNumOfTasks() + paraSieveTaskPool->getNumOfTasks()
          << "(+" << ( (paraLocalTaskPool) ? paraLocalTaskPool->getNumOfTasks() : 0 ) << ")";
       *osAssignmentTable << std::setw(12) << std::right << std::setprecision(0) << std::fixed << instancePool->size();
       *osAssignmentTable << std::setw(10) << std::right << std::setprecision(0) << std::fixed << shareDataPool->size();
@@ -1242,10 +1242,10 @@ CMapLapParaLoadCoordinator::outputCsvAssignmentTable(
          cmapLapParaInitiator->getLattice().rootHermiteFactor(shortestNorm),
          cmapLapParaSolverPool->getNumInactiveSolvers(),
          cmapLapParaSolverPool->getNumActiveSolvers(),
-         cmapLapParaSolverPool->getNumActiveDeepBkzSolvers(),
+         cmapLapParaSolverPool->getNumActiveBkzSolvers(),
          cmapLapParaSolverPool->getNumActiveEnumSolvers(),
          cmapLapParaSolverPool->getNumActiveSieveSolvers(),
-         paraDeepBkzTaskPool->getNumOfTasks(),
+         paraBkzTaskPool->getNumOfTasks(),
          paraEnumTaskPool->getNumOfTasks(),
          paraSieveTaskPool->getNumOfTasks(),
          instancePool->size(),
@@ -1263,29 +1263,29 @@ bool
 CMapLapParaLoadCoordinator::shouldCreateAndAssignTask(
       SolverType &solverType,      ///< solver-task should be created
       bool &hasSetInitialSolvers,  ///< if it is false, initial solver setting is not completed
-      bool &hasSetInitialDeepBkzSolvers
+      bool &hasSetInitialBkzSolvers
       )
 {
    if( nSolvers == 1 )
    {
-      hasSetInitialDeepBkzSolvers = true;
+      hasSetInitialBkzSolvers = true;
    }
    if( hardTimeLimitIsReached || lowerBoundIsReached )
    {
       return false;
    }
-   if( !hasSetInitialDeepBkzSolvers )
+   if( !hasSetInitialBkzSolvers )
    {
-      // note: before assign Sieve task, must assign DeepBkz or Enum task
-      if( static_cast<int>(cmapLapParaSolverPool->getNumActiveDeepBkzSolvers()) < nSolvers )
+      // note: before assign Sieve task, must assign Bkz or Enum task
+      if( static_cast<int>(cmapLapParaSolverPool->getNumActiveBkzSolvers()) < nSolvers )
       {
-         solverType = DeepBkz;
+         solverType = Bkz;
          return true;
       }
-      hasSetInitialDeepBkzSolvers = true;
+      hasSetInitialBkzSolvers = true;
       if( paraParams->getIntParamValue(NumOfInitialEnumSolvers) > 0 )
       {
-         cmapLapParaSolverPool->interruptDeepBkzSolvers(
+         cmapLapParaSolverPool->interruptBkzSolvers(
                paraParams->getIntParamValue(NumOfInitialEnumSolvers));
       }
    }
@@ -1309,7 +1309,7 @@ CMapLapParaLoadCoordinator::shouldCreateAndAssignTask(
    }
    else if( cmapLapParaSolverPool->getNumInactiveSolvers() > 0 )
    {
-      solverType = DeepBkz;
+      solverType = Bkz;
       return true;
    }
    return false;
@@ -1346,33 +1346,33 @@ CMapLapParaLoadCoordinator::getParaTask(
 {
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
    {
       if( cmapLapParaSolverPool->getNumInactiveSolvers() == 0 )
       {
-         if( !cmapLapParaSolverPool->isThereInterruptingDeepBkzSolver() )
+         if( !cmapLapParaSolverPool->isThereInterruptingBkzSolver() )
          {
             int nInterruptSolvers = 1;
-            cmapLapParaSolverPool->interruptDeepBkzSolvers(nInterruptSolvers);
+            cmapLapParaSolverPool->interruptBkzSolvers(nInterruptSolvers);
          }
       }
-      if( paraDeepBkzTaskPool->empty() )
+      if( paraBkzTaskPool->empty() )
       {
-         createParaTaskDeepBkz(begin, end);
+         createParaTaskBkz(begin, end);
       }
-      return paraDeepBkzTaskPool->extractTask();
+      return paraBkzTaskPool->extractTask();
    }
    case Enum:
    {
       if( cmapLapParaSolverPool->getNumInactiveSolvers() == 0 &&
-            !cmapLapParaSolverPool->isThereInterruptingDeepBkzSolver() )
+            !cmapLapParaSolverPool->isThereInterruptingBkzSolver() )
       {
          int nInterruptSolvers = 1;
-         cmapLapParaSolverPool->interruptDeepBkzSolvers(nInterruptSolvers);
+         cmapLapParaSolverPool->interruptBkzSolvers(nInterruptSolvers);
       }
       if( instancePool->size() == 0 )
       {
-         cmapLapParaSolverPool->sendMessageForSolvers(lcLocalComm, TagBasisRequest, hasSentBasisRequest, DeepBkz);
+         cmapLapParaSolverPool->sendMessageForSolvers(lcLocalComm, TagBasisRequest, hasSentBasisRequest, Bkz);
          sleep(std::floor(paraParams->getRealParamValue(IReceiveInterval)));
          return nullptr;
       }
@@ -1385,13 +1385,13 @@ CMapLapParaLoadCoordinator::getParaTask(
    case Sieve:
    {
       if( cmapLapParaSolverPool->getNumInactiveSolvers() == 0 &&
-            !cmapLapParaSolverPool->isThereInterruptingDeepBkzSolver() )
+            !cmapLapParaSolverPool->isThereInterruptingBkzSolver() )
       {
-         cmapLapParaSolverPool->interruptDeepBkzAndEnumSolversToRunSieveSolver();
+         cmapLapParaSolverPool->interruptBkzAndEnumSolversToRunSieveSolver();
       }
       if( instancePool->size() == 0 )
       {
-         cmapLapParaSolverPool->sendMessageForSolvers(lcLocalComm, TagBasisRequest, hasSentBasisRequest, DeepBkz);
+         cmapLapParaSolverPool->sendMessageForSolvers(lcLocalComm, TagBasisRequest, hasSentBasisRequest, Bkz);
          sleep(std::floor(paraParams->getRealParamValue(IReceiveInterval)));
          return nullptr;
       }
@@ -1407,10 +1407,10 @@ CMapLapParaLoadCoordinator::getParaTask(
 }
 
 ///
-/// @return CMapLapParaTask DeepBkz pointer
+/// @return CMapLapParaTask Bkz pointer
 ///
 int
-CMapLapParaLoadCoordinator::createParaTaskDeepBkz(
+CMapLapParaLoadCoordinator::createParaTaskBkz(
       int begin,
       int end
       )
@@ -1438,7 +1438,7 @@ CMapLapParaLoadCoordinator::createParaTaskDeepBkz(
             cmapLapParaComm->createParaTask(
                UG::TaskId(), UG::TaskId(), estimatedValue, -1,
                begin, end, blockSize, u, seed, basis)));
-   paraDeepBkzTaskPool->insert(cmapLapParaTask);
+   paraBkzTaskPool->insert(cmapLapParaTask);
    return 1;
 }
 
@@ -1553,8 +1553,8 @@ CMapLapParaLoadCoordinator::assignParaTask(
       // cannot activate
       switch( cmapLapParaTask->getSolverType() )
       {
-      case DeepBkz:
-         paraDeepBkzTaskPool->insert(cmapLapParaTask);
+      case Bkz:
+         paraBkzTaskPool->insert(cmapLapParaTask);
          break;
       case Enum:
          paraEnumTaskPool->insert(cmapLapParaTask);
@@ -1723,7 +1723,7 @@ CMapLapParaLoadCoordinator::run(
    double leftNotificationInterval = notificationInterval;
 
    bool hasSetInitialSolvers = false;
-   bool hasSetInitialDeepBkzSolvers = false;
+   bool hasSetInitialBkzSolvers = false;
    assigningParaTask = false;
 
    SolverType solverType = Undefined;
@@ -1734,7 +1734,7 @@ CMapLapParaLoadCoordinator::run(
    for(;;)
    {
       // Assign Task to idle solver
-      while( shouldCreateAndAssignTask(solverType, hasSetInitialSolvers, hasSetInitialDeepBkzSolvers) )
+      while( shouldCreateAndAssignTask(solverType, hasSetInitialSolvers, hasSetInitialBkzSolvers) )
       {
          std::shared_ptr<CMapLapParaTask> cmapLapParaTask = getParaTask(solverType, begin, end);
          if( !cmapLapParaTask ) break;
@@ -2003,7 +2003,7 @@ CMapLapParaLoadCoordinator::~CMapLapParaLoadCoordinator(
       paraComm->send( NULL, 0, UG::ParaBYTE, i, UG::TagTerminateRequest );
    }
 
-   double totalDeepBkzTime = 0;
+   double totalBkzTime = 0;
    double totalEnumTime    = 0;
    double totalSieveTime   = 0;
    nTerminated = 0;
@@ -2018,7 +2018,7 @@ CMapLapParaLoadCoordinator::~CMapLapParaLoadCoordinator(
          dynamic_cast<CMapLapParaSolverTerminationState *>(cmapLapParaComm->createParaSolverTerminationState())};
       termState->receive(cmapLapParaComm, source, tag);
       // for statistic output
-      totalDeepBkzTime += termState->getRunningTimeDeepBkz();
+      totalBkzTime += termState->getRunningTimeBkz();
       totalEnumTime    += termState->getRunningTimeEnum();
       totalSieveTime   += termState->getRunningTimeSieve();
       if( osStatisticsFinalRun )
@@ -2040,7 +2040,7 @@ CMapLapParaLoadCoordinator::~CMapLapParaLoadCoordinator(
 
    cmapLapParaInitiator->outputFinalSolverStatistics(
          0, paraTimer->getElapsedTime(),
-         totalDeepBkzTime, totalEnumTime, totalSieveTime
+         totalBkzTime, totalEnumTime, totalSieveTime
          );
 
    if( paraParams->getBoolParamValue(CheckpointThreading) )
@@ -2166,7 +2166,7 @@ CMapLapParaLoadCoordinator::copyCheckpointObjects(
    checkpointElement->paraActiveTaskQueue = std::shared_ptr<CMapLapParaTaskQueue>(
          cmapLapParaSolverPool->getParaActiveTaskQueue(paraComm)
          );
-   checkpointElement->paraDeepBkzTaskQueue = paraDeepBkzTaskPool->getParaTaskQueue(paraComm);
+   checkpointElement->paraBkzTaskQueue = paraBkzTaskPool->getParaTaskQueue(paraComm);
    checkpointElement->paraEnumTaskQueue = paraEnumTaskPool->getParaTaskQueue(paraComm);
    checkpointElement->paraSieveTaskQueue = paraSieveTaskPool->getParaTaskQueue(paraComm);
    checkpointElement->globalBestCMapLapSolution = std::shared_ptr<CMapLapParaSolution>(
@@ -2195,7 +2195,7 @@ CMapLapParaLoadCoordinator::copyCheckpointObjects(
          << Logging::getCheckpointStateString(
                paraTimer->getElapsedTime(),checkpointTime,
                checkpointElement->paraActiveTaskQueue->size(),       // nActive
-               checkpointElement->paraDeepBkzTaskQueue->size()       // nInactive
+               checkpointElement->paraBkzTaskQueue->size()       // nInactive
                   + checkpointElement->paraEnumTaskQueue->size(),
                checkpointElement->paraSieveTaskQueue->size(),        // nInactive(Sieve)
                checkpointElement->basisElementQueue->size(),         // nBasis
@@ -2208,7 +2208,7 @@ CMapLapParaLoadCoordinator::copyCheckpointObjects(
                lcts.totalCopyCheckpointTime+lcts.totalWriteCheckpointTime,
                lcts.idleTime,lcts.idleTimeToWaitIsend,
                checkpointElement->paraActiveTaskQueue->size(),       // nActive
-               checkpointElement->paraDeepBkzTaskQueue->size()       // nInactive
+               checkpointElement->paraBkzTaskQueue->size()       // nInactive
                   + checkpointElement->paraEnumTaskQueue->size(),
                checkpointElement->paraSieveTaskQueue->size(),        // nInactive(Sieve)
                checkpointElement->basisElementQueue->size(),         // nBasis
@@ -2327,7 +2327,7 @@ CMapLapParaLoadCoordinator::updateCheckpointFiles(
       exit(1);
    }
    int nActive = cmapLapParaSolverPool->writeActiveTasksToCheckpointFile(checkpointTaskStream);
-   int nInactiveDeepBkz = paraDeepBkzTaskPool-> writeTasksToCheckPointFile(checkpointTaskStream);
+   int nInactiveBkz = paraBkzTaskPool-> writeTasksToCheckPointFile(checkpointTaskStream);
    int nInactiveEnum = paraEnumTaskPool-> writeTasksToCheckPointFile(checkpointTaskStream);
    int nInactiveSieve = paraSieveTaskPool-> writeTasksToCheckPointFile(checkpointTaskStream);
 
@@ -2490,14 +2490,14 @@ CMapLapParaLoadCoordinator::updateCheckpointFiles(
       *osLogSolvingStatus
          << Logging::getCheckpointStateString(
                paraTimer->getElapsedTime(),checkpointTime,
-               nActive,nInactiveDeepBkz+nInactiveEnum,nInactiveSieve,
+               nActive,nInactiveBkz+nInactiveEnum,nInactiveSieve,
                nBasis,nVector);
       *osCsvLogCheckpoint
          << Logging::getCsvCheckpointStateString(
                paraTimer->getElapsedTime(),checkpointTime,
                lcts.totalCopyCheckpointTime+lcts.totalWriteCheckpointTime,
                lcts.idleTime,lcts.idleTimeToWaitIsend,
-               nActive,nInactiveDeepBkz+nInactiveEnum,nInactiveSieve,
+               nActive,nInactiveBkz+nInactiveEnum,nInactiveSieve,
                nBasis,nVector, ",");
    }
 
@@ -2597,9 +2597,9 @@ CMapLapParaLoadCoordinator::warmStart(
       {
          switch( paraTask->getSolverType() )
          {
-         case DeepBkz:
+         case Bkz:
             paraTask->setU(0); // do not randamize
-            paraDeepBkzTaskPool->insert(paraTask);  // active DeepBkz tasks in the previous run
+            paraBkzTaskPool->insert(paraTask);  // active Bkz tasks in the previous run
             break;
          case Enum:
             paraEnumTaskPool->insert(paraTask);
@@ -2615,9 +2615,9 @@ CMapLapParaLoadCoordinator::warmStart(
       if( logSolvingStatusFlag )
       {
          *osLogSolvingStatus << "warmStart read "
-            << paraDeepBkzTaskPool->getNumOfTasks() << " DeepBkzTasks"
-            << paraEnumTaskPool->getNumOfTasks()    << ", EnumTasks"
-            << paraSieveTaskPool->getNumOfTasks()   << ", SieveTasks" << std::endl;
+            << paraBkzTaskPool->getNumOfTasks() << " BkzTasks"
+            << paraEnumTaskPool->getNumOfTasks() << ", EnumTasks"
+            << paraSieveTaskPool->getNumOfTasks() << ", SieveTasks" << std::endl;
       }
    }
 

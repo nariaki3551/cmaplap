@@ -50,7 +50,7 @@ class CMapTestParaSolver : public ParaCMapLAP::CMapLapParaSolver
 protected:
 
    void solve();
-   void runDeepBkz();
+   void runBkz();
    void runEnum();
    void runSieve();
 

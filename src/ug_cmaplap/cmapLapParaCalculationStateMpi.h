@@ -55,13 +55,13 @@ namespace ParaCMapLAP
 class CMapLapParaCalculationStateMpi : public CMapLapParaCalculationState
 {
 
-   int iSolverType;          ///< int solver type: 0:DeepBkz, 1:Enum, 2:Sieve, -1: not set
+   int iSolverType;          ///< int solver type: 0:Bkz, 1:Enum, 2:Sieve, -1: not set
 
    ///
-   /// create MPI datatypeDeepBkz of this object
-   /// @return MPI dataypteDeepBkz of this object
+   /// create MPI datatypeBkz of this object
+   /// @return MPI dataypteBkz of this object
    ///
-   virtual MPI_Datatype createDatatypeDeepBkz(
+   virtual MPI_Datatype createDatatypeBkz(
          );
 
    ///
@@ -94,8 +94,8 @@ public:
    CMapLapParaCalculationStateMpi(
          int          inTermState,          ///< termination status, 0: normal, -1: interrupted
          int          inThreadId,           ///< thread id
-         int          inCurrentBlockSize,   ///< current DeepBkz block size
-         int          inTour,               ///< number of DeepBkz loop
+         int          inCurrentBlockSize,   ///< current Bkz block size
+         int          inTour,               ///< number of Bkz loop
          double       inElapsedTime,        ///< elapsed time
          double       inShortestNorm,       ///< the shortest norm found
          double       inApproxFactor,       ///< approximated factor
@@ -123,7 +123,7 @@ public:
                inTopHalfSlopeGSA,
                inOrthogonalFactor
                ),
-           iSolverType(static_cast<int>(DeepBkz))
+           iSolverType(static_cast<int>(Bkz))
    {
    }
 

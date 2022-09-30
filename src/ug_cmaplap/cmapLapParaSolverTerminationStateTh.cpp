@@ -70,19 +70,19 @@ CMapLapParaSolverTerminationStateTh::createDatatype(
          idleTimeToWaitBasis,
          idleTimeToWaitIsend,
          detTime,
-         nParaTasksDeepBkzReceived,
+         nParaTasksBkzReceived,
          nParaTasksEnumReceived,
          nParaTasksSieveReceived,
-         runningTimeDeepBkz,
+         runningTimeBkz,
          runningTimeEnum,
          runningTimeSieve,
-         nVectorsReceivedDeepBkz,
+         nVectorsReceivedBkz,
          nVectorsReceivedEnum,
          nVectorsReceivedSieve,
-         nVectorsSentDeepBkz,
+         nVectorsSentBkz,
          nVectorsSentEnum,
          nVectorsSentSieve,
-         nBasesSentDeepBkz,
+         nBasesSentBkz,
          nSolverStateSent
          );
 
@@ -151,19 +151,19 @@ CMapLapParaSolverTerminationStateTh::receive(
    idleTimeToWaitBasis           = received->idleTimeToWaitBasis;
    idleTimeToWaitIsend           = received->idleTimeToWaitIsend;
    detTime                       = received->detTime;
-   nParaTasksDeepBkzReceived     = received->nParaTasksDeepBkzReceived;
+   nParaTasksBkzReceived         = received->nParaTasksBkzReceived;
    nParaTasksEnumReceived        = received->nParaTasksEnumReceived;
    nParaTasksSieveReceived       = received->nParaTasksSieveReceived;
-   runningTimeDeepBkz            = received->runningTimeDeepBkz;
+   runningTimeBkz                = received->runningTimeBkz;
    runningTimeEnum               = received->runningTimeEnum;
    runningTimeSieve              = received->runningTimeSieve;
-   nVectorsReceivedDeepBkz       = received->nVectorsReceivedDeepBkz;
+   nVectorsReceivedBkz           = received->nVectorsReceivedBkz;
    nVectorsReceivedEnum          = received->nVectorsReceivedEnum;
    nVectorsReceivedSieve         = received->nVectorsReceivedSieve;
-   nVectorsSentDeepBkz           = received->nVectorsSentDeepBkz;
+   nVectorsSentBkz               = received->nVectorsSentBkz;
    nVectorsSentEnum              = received->nVectorsSentEnum;
    nVectorsSentSieve             = received->nVectorsSentSieve;
-   nBasesSentDeepBkz             = received->nBasesSentDeepBkz;
+   nBasesSentBkz                 = received->nBasesSentBkz;
    nSolverStateSent              = received->nSolverStateSent;
 }
 

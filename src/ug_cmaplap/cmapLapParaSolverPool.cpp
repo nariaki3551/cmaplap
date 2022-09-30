@@ -345,7 +345,7 @@ CMapLapParaSolverPool::activateSolver(
       solverThreadId = getSolverThreadId(rank, threadId);
 
       if( pool[( solverThreadId )]->getStatus() == UG::Inactive &&
-            ( ( ( solverType == DeepBkz || solverType == Enum ) &&
+            ( ( ( solverType == Bkz || solverType == Enum ) &&
                !pool[( solverThreadId )]->isReservedForSieve() ) ||
               ( ( solverType == Sieve ) &&
                ( pool[( solverThreadId )]->isReservedForSieve() || nSolvers == 1) ) ) )
@@ -388,10 +388,10 @@ CMapLapParaSolverPool::activateSolver(
 
    switch( solverType )
    {
-   case DeepBkz:
-      activeDeepBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
+   case Bkz:
+      activeBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
       deepBkzSelectionHeap->insert(pool[( solverThreadId )]);
-      nDeepBkzTasks++;
+      nBkzTasks++;
       break;
    case Enum:
       activeEnumSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
@@ -418,12 +418,12 @@ CMapLapParaSolverPool::activateSolver(
 
 
 ///
-/// get interrupt DeepBkz solver
-/// @return interrupt DeepBkz solver rank, -1 is reserved for Sieve
+/// get interrupt Bkz solver
+/// @return interrupt Bkz solver rank, -1 is reserved for Sieve
 ///
 int
-CMapLapParaSolverPool::getInterruptDeepBkzSolver(
-      int &threadId           ///< interrupt DeepBkz solver thread id (return value)
+CMapLapParaSolverPool::getInterruptBkzSolver(
+      int &threadId           ///< interrupt Bkz solver thread id (return value)
       )
 {
    assert( deepBkzSelectionHeap->getHeapSize() > 0 );
@@ -450,25 +450,25 @@ CMapLapParaSolverPool::getInterruptEnumSolver(
 
 
 ///
-/// interrupt DeepBkz Solvers
+/// interrupt Bkz Solvers
 ///
 void
-CMapLapParaSolverPool::interruptDeepBkzSolvers(
+CMapLapParaSolverPool::interruptBkzSolvers(
       int nInterrupt     ///< number of interrupt solvers
       )
 {
    DEF_CMAP_LAP_PARA_COMM( cmapLapParaComm, paraComm );
-   while( static_cast<int>(interruptingDeepBkzSolvers.size()) < nInterrupt && activeDeepBkzSolvers.size() > 0 )
+   while( static_cast<int>(interruptingBkzSolvers.size()) < nInterrupt && activeBkzSolvers.size() > 0 )
    {
       int threadId = -1;
-      int rank = getInterruptDeepBkzSolver(threadId);
+      int rank = getInterruptBkzSolver(threadId);
       if( rank >= 0 )
       {
          assert(threadId >= 0);
          unsigned int solverThreadId = getSolverThreadId(rank, threadId);
          assert( !pool[solverThreadId]->isReservedForSieve() );
-         auto p = activeDeepBkzSolvers.find(solverThreadId);
-         if( p != activeDeepBkzSolvers.end() )
+         auto p = activeBkzSolvers.find(solverThreadId);
+         if( p != activeBkzSolvers.end() )
          {
             if( p->second->getRank() != rank ||
                   pool[( solverThreadId )]->getRank() != rank ||
@@ -479,13 +479,13 @@ CMapLapParaSolverPool::interruptDeepBkzSolvers(
             PARA_COMM_CALL(
                   cmapLapParaComm->send( &threadId, 1, UG::ParaINT, rank, UG::TagInterruptRequest);
             );
-            activeDeepBkzSolvers.erase(p);
+            activeBkzSolvers.erase(p);
             deepBkzSelectionHeap->deleteElement(pool[( solverThreadId )]);
-            interruptingDeepBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
+            interruptingBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
          }
          else
          {
-            THROW_LOGICAL_ERROR2("DeepBkz solver rank = ", rank);
+            THROW_LOGICAL_ERROR2("Bkz solver rank = ", rank);
          }
       }
    }
@@ -536,10 +536,10 @@ CMapLapParaSolverPool::interruptEnumSolvers(
 
 
 ///
-/// interrupt DeepBkz and Enum Solvers to run a Sieve Solver
+/// interrupt Bkz and Enum Solvers to run a Sieve Solver
 ///
 bool
-CMapLapParaSolverPool::interruptDeepBkzAndEnumSolversToRunSieveSolver(
+CMapLapParaSolverPool::interruptBkzAndEnumSolversToRunSieveSolver(
       )
 {
    DEF_CMAP_LAP_PARA_COMM( cmapLapParaComm, paraComm );
@@ -580,10 +580,10 @@ CMapLapParaSolverPool::interruptDeepBkzAndEnumSolversToRunSieveSolver(
       {
          switch ( pool[solverThreadId]->getSolverType() )
          {
-         case DeepBkz:
+         case Bkz:
          {
-            auto p = activeDeepBkzSolvers.find(solverThreadId);
-            if( p != activeDeepBkzSolvers.end() )
+            auto p = activeBkzSolvers.find(solverThreadId);
+            if( p != activeBkzSolvers.end() )
             {
                if( p->second->getRank() != rank ||
                      pool[( solverThreadId )]->getRank()     != static_cast<int>(rank) ||
@@ -594,14 +594,14 @@ CMapLapParaSolverPool::interruptDeepBkzAndEnumSolversToRunSieveSolver(
                PARA_COMM_CALL(
                      cmapLapParaComm->send( &threadId, 1, UG::ParaINT, rank, UG::TagInterruptRequest);
                );
-               std::cout << "CMapLapParaSolverPool::interruptDeepBkzAndEnumSolversToRunSieveSolver: send UG::TagInterruptRequest rank " << rank << " threadId " << threadId  << std::endl;
-               activeDeepBkzSolvers.erase(p);
+               std::cout << "CMapLapParaSolverPool::interruptBkzAndEnumSolversToRunSieveSolver: send UG::TagInterruptRequest rank " << rank << " threadId " << threadId  << std::endl;
+               activeBkzSolvers.erase(p);
                deepBkzSelectionHeap->deleteElement(pool[( solverThreadId )]);
-               interruptingDeepBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
+               interruptingBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
             }
             else
             {
-               THROW_LOGICAL_ERROR2("DeepBkz solver rank = ", rank);
+               THROW_LOGICAL_ERROR2("Bkz solver rank = ", rank);
             }
             pool[solverThreadId]->reserveForSieve();
             break;
@@ -643,10 +643,10 @@ CMapLapParaSolverPool::interruptDeepBkzAndEnumSolversToRunSieveSolver(
 
 
 ///
-/// interrupt DeepBkz and Enum Solvers to run a Sieve Solver
+/// interrupt Bkz and Enum Solvers to run a Sieve Solver
 ///
 bool
-CMapLapParaSolverPool::interruptEnumAndDeepBkzSolversToRunSieveSolver(
+CMapLapParaSolverPool::interruptEnumAndBkzSolversToRunSieveSolver(
       )
 {
    DEF_CMAP_LAP_PARA_COMM( cmapLapParaComm, paraComm );
@@ -687,10 +687,10 @@ CMapLapParaSolverPool::interruptEnumAndDeepBkzSolversToRunSieveSolver(
       {
          switch ( pool[solverThreadId]->getSolverType() )
          {
-         case DeepBkz:
+         case Bkz:
          {
-            auto p = activeDeepBkzSolvers.find(solverThreadId);
-            if( p != activeDeepBkzSolvers.end() )
+            auto p = activeBkzSolvers.find(solverThreadId);
+            if( p != activeBkzSolvers.end() )
             {
                if( p->second->getRank() != rank ||
                      pool[( solverThreadId )]->getRank()     != static_cast<int>(rank) ||
@@ -701,13 +701,13 @@ CMapLapParaSolverPool::interruptEnumAndDeepBkzSolversToRunSieveSolver(
                PARA_COMM_CALL(
                      cmapLapParaComm->send( &threadId, 1, UG::ParaINT, rank, UG::TagInterruptRequest);
                );
-               activeDeepBkzSolvers.erase(p);
+               activeBkzSolvers.erase(p);
                deepBkzSelectionHeap->deleteElement(pool[( solverThreadId )]);
-               interruptingDeepBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
+               interruptingBkzSolvers.insert(std::make_pair(solverThreadId,pool[( solverThreadId )]));
             }
             else
             {
-               THROW_LOGICAL_ERROR2("DeepBkz solver rank = ", rank);
+               THROW_LOGICAL_ERROR2("Bkz solver rank = ", rank);
             }
             pool[solverThreadId]->reserveForSieve();
             break;
@@ -777,11 +777,11 @@ CMapLapParaSolverPool::inactivateSolver(
    {
       switch( pool[( solverThreadId )]->getSolverType() )
       {
-      case DeepBkz:
+      case Bkz:
          {
-            activeSolvers = &activeDeepBkzSolvers;
+            activeSolvers = &activeBkzSolvers;
             selectionHeap = deepBkzSelectionHeap;
-            interruptingSolvers = &interruptingDeepBkzSolvers;
+            interruptingSolvers = &interruptingBkzSolvers;
             break;
          }
          case Enum:
@@ -883,14 +883,14 @@ CMapLapParaSolverPool::getBasis(
 
    unsigned int solverThreadId = getSolverThreadId(rank, threadId);
    assert( pool[(solverThreadId)]->getStatus() == UG::Active );
-   assert( pool[(solverThreadId)]->getSolverType() == DeepBkz );
+   assert( pool[(solverThreadId)]->getSolverType() == Bkz );
 
-   auto p = activeDeepBkzSolvers.find(solverThreadId);
-   if( p == activeDeepBkzSolvers.end() )
+   auto p = activeBkzSolvers.find(solverThreadId);
+   if( p == activeBkzSolvers.end() )
    {
-      p = interruptingDeepBkzSolvers.find(solverThreadId);
+      p = interruptingBkzSolvers.find(solverThreadId);
    }
-   if( p == interruptingDeepBkzSolvers.end() )
+   if( p == interruptingBkzSolvers.end() )
    {
       THROW_LOGICAL_ERROR4("Invalid rank. Rank = ", rank, ", or invalid thread Id = ", threadId);
    }
@@ -899,7 +899,7 @@ CMapLapParaSolverPool::getBasis(
 
 
 ///
-/// update DeepBkz Solver status
+/// update Bkz Solver status
 ///
 void
 CMapLapParaSolverPool::updateSolverStatus(
@@ -924,13 +924,13 @@ CMapLapParaSolverPool::updateSolverStatus(
 
    unsigned int solverThreadId = getSolverThreadId(rank, threadId);
    assert( pool[(solverThreadId)]->getStatus() == UG::Active );
-   assert( pool[(solverThreadId)]->getSolverType() == DeepBkz );
+   assert( pool[(solverThreadId)]->getSolverType() == Bkz );
 
-   auto p = activeDeepBkzSolvers.find(solverThreadId);
-   if( p != activeDeepBkzSolvers.end() )
+   auto p = activeBkzSolvers.find(solverThreadId);
+   if( p != activeBkzSolvers.end() )
    {
       // assert( (numOfNodesSolved - p->second->getNumOfNodesSolved() ) >= 0 ); // if solver restart, this is not always true
-      p->second->updateDeepBkzSolverData(
+      p->second->updateBkzSolverData(
             inBlockSize,
             inBasis,
             inEnumCost,
@@ -942,8 +942,8 @@ CMapLapParaSolverPool::updateSolverStatus(
    }
    else
    {
-      p = interruptingDeepBkzSolvers.find(solverThreadId);
-      if( p == interruptingDeepBkzSolvers.end() )
+      p = interruptingBkzSolvers.find(solverThreadId);
+      if( p == interruptingBkzSolvers.end() )
       {
          THROW_LOGICAL_ERROR4("Invalid rank. Rank = ", rank, ", or invalid thread Id = ", threadId);
       }
@@ -1081,11 +1081,11 @@ CMapLapParaSolverPool::interruptAllSolvers(
 
             switch( pool[( solverThreadId )]->getSolverType() )
             {
-            case DeepBkz:
+            case Bkz:
             {
-               activeSolvers = &activeDeepBkzSolvers;
+               activeSolvers = &activeBkzSolvers;
                selectionHeap = deepBkzSelectionHeap;
-               interruptingSolvers = &interruptingDeepBkzSolvers;
+               interruptingSolvers = &interruptingBkzSolvers;
                break;
             }
             case Enum:
@@ -1169,7 +1169,7 @@ CMapLapParaSolverPool::terminateAllSolvers(
 
 
 ///
-/// get basis of DeepBkz Solvers
+/// get basis of Bkz Solvers
 /// @return deque of basis(Eigen::LatticeBasis<int>)
 ///
 std::deque<std::shared_ptr<LatticeBasis<int>>>
@@ -1178,7 +1178,7 @@ CMapLapParaSolverPool::getBasisOfSolvers(
 {
    std::deque<std::shared_ptr<LatticeBasis<int>>> basisDeque;
    int numBasis = 0;
-   for( auto x : activeDeepBkzSolvers )
+   for( auto x : activeBkzSolvers )
    {
       // x->second is SolverPoolElement
       auto basis = x.second->getCurrentTask()->getBasis();

@@ -100,8 +100,8 @@ getSolverTypeString(
 {
    switch( solverType )
    {
-      case DeepBkz:
-         return "DeepBkz";
+      case Bkz:
+         return "Bkz";
       case Enum:
          return "Enum";
       case Sieve:
@@ -121,7 +121,7 @@ getCMapLapParaAssignmentTableHeader(
 {
    std::ostringstream s;
    s << "                                                  # of Active  # of Active  # of Active" << std::endl;
-   s << "         Shortest Approx. # of Idle  # of Active      DeepBkz         Enum        Sieve       # of  # of Basis # of Vec." << std::endl;
+   s << "         Shortest Approx. # of Idle  # of Active      Bkz         Enum        Sieve       # of  # of Basis # of Vec." << std::endl;
    s << "   Time      Norm  Factor   Solvers      Solvers      Solvers      Solvers      Solvers      Tasks     in Pool   in Pool" << std::endl;
    return s.str();
 }
@@ -202,11 +202,11 @@ getCMapLapParaCsvStatisticsFinalRunHeader(
       ",idleTimeToWaitSolverState,idleTimeToWaitPackedVector,idleTimeToWaitSolution,idleTimeToWaitBasis"
       ",idleTimeToWaitIsend"
       ",nParaTasksReceived,nParaTasksSolved"
-      ",nParaTasksDeepBkzReceived,nParaTasksEnumReceived,nParaTasksSieveReceived"
-      ",runningTimeDeepBkz,runningTimeEnum,runningTimeSieve"
-      ",nVectorsReceivedDeepBkz,nVectorsReceivedEnum,nVectorsReceivedSieve"
-      ",nVectorsSentDeepBkz,nVectorsSentEnum,nVectorsSentSieve"
-      ",nBasesSentDeepBkz,nSolverStateSent"
+      ",nParaTasksBkzReceived,nParaTasksEnumReceived,nParaTasksSieveReceived"
+      ",runningTimeBkz,runningTimeEnum,runningTimeSieve"
+      ",nVectorsReceivedBkz,nVectorsReceivedEnum,nVectorsReceivedSieve"
+      ",nVectorsSentBkz,nVectorsSentEnum,nVectorsSentSieve"
+      ",nBasesSentBkz,nSolverStateSent"
       "\n";
 }
 

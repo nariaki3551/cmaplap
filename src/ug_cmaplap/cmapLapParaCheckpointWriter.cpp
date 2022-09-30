@@ -189,10 +189,10 @@ CMapLapParaCheckpointWriter::updateCheckpointFiles(
       exit(1);
    }
    bool active = true;
-   checkpointElement->paraActiveTaskQueue-> writeTasksToCheckPointFile(checkpointTaskStream,active);
-   checkpointElement->paraDeepBkzTaskQueue->writeTasksToCheckPointFile(checkpointTaskStream,!active);
-   checkpointElement->paraEnumTaskQueue->   writeTasksToCheckPointFile(checkpointTaskStream,!active);
-   checkpointElement->paraSieveTaskQueue->  writeTasksToCheckPointFile(checkpointTaskStream,!active);
+   checkpointElement->paraActiveTaskQueue->  writeTasksToCheckPointFile(checkpointTaskStream,active);
+   checkpointElement->paraBkzTaskQueue->     writeTasksToCheckPointFile(checkpointTaskStream,!active);
+   checkpointElement->paraEnumTaskQueue->    writeTasksToCheckPointFile(checkpointTaskStream,!active);
+   checkpointElement->paraSieveTaskQueue->   writeTasksToCheckPointFile(checkpointTaskStream,!active);
    checkpointTaskStream.close();
 
 

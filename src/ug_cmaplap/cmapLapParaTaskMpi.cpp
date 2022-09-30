@@ -52,7 +52,7 @@ namespace ParaCMapLAP
 {
 
 MPI_Datatype
-CMapLapParaTaskMpi::createDatatypeDeepBkz(
+CMapLapParaTaskMpi::createDatatypeBkz(
       )
 {
    const int nBlocks = 17;
@@ -125,27 +125,27 @@ CMapLapParaTaskMpi::createDatatypeDeepBkz(
    displacements[9] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaTaskDeepBkz.begin, &address )
+      MPI_Get_address( &cmapLapParaTaskBkz.begin, &address )
    );
    displacements[10] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaTaskDeepBkz.end, &address )
+      MPI_Get_address( &cmapLapParaTaskBkz.end, &address )
    );
    displacements[11] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaTaskDeepBkz.blocksize, &address )
+      MPI_Get_address( &cmapLapParaTaskBkz.blocksize, &address )
    );
    displacements[12] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaTaskDeepBkz.u, &address )
+      MPI_Get_address( &cmapLapParaTaskBkz.u, &address )
    );
    displacements[13] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaTaskDeepBkz.seed, &address )
+      MPI_Get_address( &cmapLapParaTaskBkz.seed, &address )
    );
    displacements[14] = address - startAddress;
 
@@ -404,46 +404,46 @@ CMapLapParaTaskMpi::bcast(
 
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
       {
-         solverType = DeepBkz;
+         solverType = Bkz;
          if( comm->getRank() == root )
          {
-            MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+            MPI_Datatype datatypeBkz = createDatatypeBkz();
             MPI_CALL(
-                  MPI_Type_commit( &datatypeDeepBkz )
+                  MPI_Type_commit( &datatypeBkz )
                   );
             PARA_COMM_CALL(
-                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeDeepBkz, root)
+                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeBkz, root)
                   );
             MPI_CALL(
-                  MPI_Type_free( &datatypeDeepBkz )
+                  MPI_Type_free( &datatypeBkz )
                   );
 
             box.resize(nRows*nCols);
-            Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols) = *cmapLapParaTaskDeepBkz.basis;
+            Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols) = *cmapLapParaTaskBkz.basis;
             PARA_COMM_CALL(
                   commMpi->bcast(&box[0], nRows*nCols, UG::ParaINT, root)
                   );
          }
          else
          {
-            MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+            MPI_Datatype datatypeBkz = createDatatypeBkz();
             MPI_CALL(
-                  MPI_Type_commit( &datatypeDeepBkz )
+                  MPI_Type_commit( &datatypeBkz )
                   );
             PARA_COMM_CALL(
-                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeDeepBkz, root)
+                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeBkz, root)
                   );
             MPI_CALL(
-                  MPI_Type_free( &datatypeDeepBkz )
+                  MPI_Type_free( &datatypeBkz )
                   );
 
             box.resize(nRows*nCols);
             PARA_COMM_CALL(
                   commMpi->bcast(&box[0], nRows*nCols, UG::ParaINT, root)
                   );
-            cmapLapParaTaskDeepBkz.basis = std::make_shared<LatticeBasis<int>>(
+            cmapLapParaTaskBkz.basis = std::make_shared<LatticeBasis<int>>(
                   Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols)
                   );
          }
@@ -479,15 +479,15 @@ CMapLapParaTaskMpi::bcast(
          }
          else
          {
-            MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+            MPI_Datatype datatypeBkz = createDatatypeBkz();
             MPI_CALL(
-                  MPI_Type_commit( &datatypeDeepBkz )
+                  MPI_Type_commit( &datatypeBkz )
                   );
             PARA_COMM_CALL(
-                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeDeepBkz, root)
+                  commMpi->ubcast(&taskId.subtaskId.lcId, 1, datatypeBkz, root)
                   );
             MPI_CALL(
-                  MPI_Type_free( &datatypeDeepBkz )
+                  MPI_Type_free( &datatypeBkz )
                   );
 
             vec.resize(nCols);
@@ -612,24 +612,24 @@ CMapLapParaTaskMpi::send(
 
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
       {
-         MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+         MPI_Datatype datatypeBkz = createDatatypeBkz();
          MPI_CALL(
-               MPI_Type_commit( &datatypeDeepBkz )
+               MPI_Type_commit( &datatypeBkz )
                );
          auto req1 = std::make_shared<MPI_Request>();
          PARA_COMM_CALL(
-               commMpi->iUsend(&taskId.subtaskId.lcId, 1, datatypeDeepBkz, destination, TagTask1, req1.get())
+               commMpi->iUsend(&taskId.subtaskId.lcId, 1, datatypeBkz, destination, TagTask1, req1.get())
                );
          auto iSendReq1 = std::make_shared<CMapLapParaIsendRequest>(req1, shared_from_this());
          commMpi->pushISendRequest(iSendReq1);
          MPI_CALL(
-               MPI_Type_free( &datatypeDeepBkz )
+               MPI_Type_free( &datatypeBkz )
                );
 
          box.resize(nRows*nCols);
-         Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols) = *cmapLapParaTaskDeepBkz.basis;
+         Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols) = *cmapLapParaTaskBkz.basis;
          auto req2 = std::make_shared<MPI_Request>();
          PARA_COMM_CALL(
                commMpi->iSend(&box[0], nRows*nCols, UG::ParaINT, destination, TagTask2, req2.get())
@@ -731,8 +731,8 @@ CMapLapParaTaskMpi::receive(
 
       switch( iSolverType )
       {
-      case static_cast<int>(DeepBkz):
-         solverType = DeepBkz;
+      case static_cast<int>(Bkz):
+         solverType = Bkz;
          break;
       case static_cast<int>(Enum):
          solverType = Enum;
@@ -751,18 +751,18 @@ CMapLapParaTaskMpi::receive(
 
       switch(solverType)
       {
-      case DeepBkz:
+      case Bkz:
       {
-         solverType = DeepBkz;
-         MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+         solverType = Bkz;
+         MPI_Datatype datatypeBkz = createDatatypeBkz();
          MPI_CALL(
-            MPI_Type_commit( &datatypeDeepBkz )
+            MPI_Type_commit( &datatypeBkz )
          );
          PARA_COMM_CALL(
-            commMpi->ureceive(&taskId.subtaskId.lcId, 1, datatypeDeepBkz, source, TagTask1)
+            commMpi->ureceive(&taskId.subtaskId.lcId, 1, datatypeBkz, source, TagTask1)
          );
          MPI_CALL(
-            MPI_Type_free( &datatypeDeepBkz )
+            MPI_Type_free( &datatypeBkz )
          );
 
          int tempTag2;
@@ -772,7 +772,7 @@ CMapLapParaTaskMpi::receive(
          PARA_COMM_CALL(
             commMpi->receive(&box[0], nRows*nCols, UG::ParaINT, source, TagTask2)
          );
-         cmapLapParaTaskDeepBkz.basis = std::make_shared<LatticeBasis<int>>(
+         cmapLapParaTaskBkz.basis = std::make_shared<LatticeBasis<int>>(
                Eigen::Map<LatticeBasis<int>>(&box[0], nRows, nCols)
                );
          break;
@@ -858,14 +858,14 @@ CMapLapParaTaskMpi::receive(
       solverType = received->solverType;
       switch( solverType )
       {
-      case DeepBkz:
+      case Bkz:
       {
-         cmapLapParaTaskDeepBkz.begin      = received->cmapLapParaTaskDeepBkz.begin;
-         cmapLapParaTaskDeepBkz.end        = received->cmapLapParaTaskDeepBkz.end;
-         cmapLapParaTaskDeepBkz.blocksize  = received->cmapLapParaTaskDeepBkz.blocksize;
-         cmapLapParaTaskDeepBkz.u          = received->cmapLapParaTaskDeepBkz.u;
-         cmapLapParaTaskDeepBkz.seed       = received->cmapLapParaTaskDeepBkz.seed;
-         cmapLapParaTaskDeepBkz.basis      = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskDeepBkz.basis));
+         cmapLapParaTaskBkz.begin      = received->cmapLapParaTaskBkz.begin;
+         cmapLapParaTaskBkz.end        = received->cmapLapParaTaskBkz.end;
+         cmapLapParaTaskBkz.blocksize  = received->cmapLapParaTaskBkz.blocksize;
+         cmapLapParaTaskBkz.u          = received->cmapLapParaTaskBkz.u;
+         cmapLapParaTaskBkz.seed       = received->cmapLapParaTaskBkz.seed;
+         cmapLapParaTaskBkz.basis      = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskBkz.basis));
          break;
       }
       case Enum:

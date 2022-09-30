@@ -50,9 +50,9 @@
 namespace ParaCMapLAP
 {
 
-typedef struct CMapLapParaCalculationStateDeepBkz_ {
-   int      currentBlockSize;   ///< current DeepBkz block size
-   int      tour;               ///< number of DeepBkz loop
+typedef struct CMapLapParaCalculationStateBkz_ {
+   int      currentBlockSize;   ///< current Bkz block size
+   int      tour;               ///< number of Bkz loop
    double   shortestNorm;       ///< the shortest norm found
    double   approxFactor;       ///< approximate factor
    double   hermiteFactor;      ///< hermite factor
@@ -62,7 +62,7 @@ typedef struct CMapLapParaCalculationStateDeepBkz_ {
    double   slopeGSA;           ///< slope of GSA line [Pool] better a than b when a > b
    double   topHalfSlopeGSA;    ///< slope of top-half GSA line [Pool] better a than b when a > b
    double   orthogonalFactor;   ///< orthogonal factor [Pool] better a than b when a < b
-} CMapLapParaCalculationStateDeepBkz;
+} CMapLapParaCalculationStateBkz;
 
 typedef struct CMapLapParaCalculationStateEnum_ {
    double   shortestNorm;       ///< the shortest norm found
@@ -86,9 +86,9 @@ typedef struct CMapLapParaCalculationStateSieve_ {
 } CMapLapParaCalculationStateSieve;
 
 typedef union CMapLapParaCalculationStateData_ {
-   CMapLapParaCalculationStateDeepBkz cmapLapParaCalculationStateDeepBkz;
-   CMapLapParaCalculationStateEnum    cmapLapParaCalculationStateEnum;
-   CMapLapParaCalculationStateSieve   cmapLapParaCalculationStateSieve;
+   CMapLapParaCalculationStateBkz   cmapLapParaCalculationStateBkz;
+   CMapLapParaCalculationStateEnum  cmapLapParaCalculationStateEnum;
+   CMapLapParaCalculationStateSieve cmapLapParaCalculationStateSieve;
 } CMapLapParaCalculationStateData;
 
 
@@ -134,13 +134,13 @@ public:
    }
 
    ///
-   /// Constructor of DeepBkz
+   /// Constructor of Bkz
    ///
    CMapLapParaCalculationState(
          int          inTermState,          ///< termination status, 0: normal, -1: interrupted
          int          inThreadId,           ///< thread id
-         int          inCurrentBlockSize,   ///< current DeepBkz block size
-         int          inTour,               ///< number of DeepBkz loop
+         int          inCurrentBlockSize,   ///< current Bkz block size
+         int          inTour,               ///< number of Bkz loop
          double       inElapsedTime,        ///< elapsed time
          double       inShortestNorm,       ///< the shortest norm found
          double       inApproxFactor,       ///< approximated factor
@@ -154,19 +154,19 @@ public:
          )
          : ParaCalculationState(inElapsedTime, 1, inTermState),
            threadId(inThreadId),
-           solverType(DeepBkz)
+           solverType(Bkz)
    {
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.currentBlockSize = inCurrentBlockSize;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.tour = inTour;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.shortestNorm = inShortestNorm;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.approxFactor = inApproxFactor;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.hermiteFactor = inHermiteFactor;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.rootHermiteFactor = inRootHermiteFactor;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCost = inEnumCost;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCostGH = inEnumCostGH;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.slopeGSA = inSlopeGSA;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.topHalfSlopeGSA = inTopHalfSlopeGSA;
-      cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.orthogonalFactor = inOrthogonalFactor;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.currentBlockSize = inCurrentBlockSize;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.tour = inTour;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.shortestNorm = inShortestNorm;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.approxFactor = inApproxFactor;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.hermiteFactor = inHermiteFactor;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.rootHermiteFactor = inRootHermiteFactor;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCost = inEnumCost;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCostGH = inEnumCostGH;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.slopeGSA = inSlopeGSA;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.topHalfSlopeGSA = inTopHalfSlopeGSA;
+      cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.orthogonalFactor = inOrthogonalFactor;
    }
 
    ///
@@ -308,8 +308,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return toStringLogDeepBkz(delimiter);
+      case Bkz:
+         return toStringLogBkz(delimiter);
       case Enum:
          return toStringLogEnum(delimiter);
       case Sieve:
@@ -320,32 +320,32 @@ public:
    }
 
    ///
-   /// stringfy CMapLapParaCalculationStateDeepBkz
-   /// @return simple string to show CMapLapParaCalculationStateDeepBkz
+   /// stringfy CMapLapParaCalculationStateBkz
+   /// @return simple string to show CMapLapParaCalculationStateBkz
    ///
-   virtual const std::string toStringLogDeepBkz(
+   virtual const std::string toStringLogBkz(
          std::string delimiter=""
          )
    {
-      std::string taskName       = "DeepBkz";
+      std::string taskName       = "Bkz";
       double   elapsedTime       = getCompTime();
-      int      size              = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.currentBlockSize;
-      long int iter              = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.tour;
+      int      size              = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.currentBlockSize;
+      long int iter              = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.tour;
       double   progress          = 0.0;
-      double   leftTime          = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCost;
-      double   logCost           = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCost;
-      double   shortestNorm      = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.shortestNorm;
-      double   approxFactor      = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.approxFactor;
-      double   hermiteFactor     = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.hermiteFactor;
-      double   rootHermiteFactor = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.rootHermiteFactor;
-      double   orthogonalFactor  = cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.orthogonalFactor;
+      double   leftTime          = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCost;
+      double   logCost           = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCost;
+      double   shortestNorm      = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.shortestNorm;
+      double   approxFactor      = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.approxFactor;
+      double   hermiteFactor     = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.hermiteFactor;
+      double   rootHermiteFactor = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.rootHermiteFactor;
+      double   orthogonalFactor  = cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.orthogonalFactor;
       int      meanMessageQueueSize = -1;
       int      maxMessageQueueSize  = -1;
       std::ostringstream s_appendix;
       s_appendix << " -- rho " << std::fixed << std::setprecision(5)
-                 << cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.slopeGSA
+                 << cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.slopeGSA
                  << ", half rho " << std::fixed << std::setprecision(5)
-                 << cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.topHalfSlopeGSA;
+                 << cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.topHalfSlopeGSA;
 
       return Logging::toStringLogBase(taskName, elapsedTime, size, iter, progress, leftTime, logCost,
             shortestNorm, approxFactor, hermiteFactor, rootHermiteFactor, orthogonalFactor,

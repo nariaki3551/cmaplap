@@ -181,7 +181,7 @@ CMapLapParaParamSet::CMapLapParaParamSet(
          INT_MAX);
    paraParams[SubEnumProjectedDimension] = new UG::ParaParamInt(
          "SubEnumProjectedDimension",
-         "# Projected dimension of SubEnum. 0 means run normal Enum [Default value: 0][0, INT_MAX]",a
+         "# Projected dimension of SubEnum. 0 means run normal Enum [Default value: 0][0, INT_MAX]",
          0,
          0,
          INT_MAX);

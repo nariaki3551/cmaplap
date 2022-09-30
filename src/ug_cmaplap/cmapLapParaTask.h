@@ -57,7 +57,7 @@ namespace ParaCMapLAP { class CMapLapParaTaskTh; }
 namespace ParaCMapLAP
 {
 
-struct CMapLapParaTaskDeepBkz {
+struct CMapLapParaTaskBkz {
    int         begin;            ///< 1st index of block matrix
    int           end;            ///< last index of block matrix
    int     blocksize;            ///< the current blocksize
@@ -93,7 +93,7 @@ protected:
 
    int threadId;  ///< threadId = -1 when solverType is Sieve
    SolverType solverType;
-   CMapLapParaTaskDeepBkz cmapLapParaTaskDeepBkz;
+   CMapLapParaTaskBkz cmapLapParaTaskBkz;
    CMapLapParaTaskEnum cmapLapParaTaskEnum;
    CMapLapParaTaskSieve cmapLapParaTaskSieve;
 
@@ -114,7 +114,7 @@ public:
    }
 
    ///
-   ///  constructor of DeepBkz
+   ///  constructor of Bkz
    ///
    CMapLapParaTask(
          UG::TaskId inTaskId,                ///< task id
@@ -130,14 +130,14 @@ public:
          )
          : UG::ParaTask(inTaskId, inGeneratorTaskId, inEstimatedValue, 0),
            threadId(inThreadId),
-           solverType(DeepBkz)
+           solverType(Bkz)
    {
-      cmapLapParaTaskDeepBkz.begin     = inBegin;
-      cmapLapParaTaskDeepBkz.end       = inEnd;
-      cmapLapParaTaskDeepBkz.blocksize = inBlockSize;
-      cmapLapParaTaskDeepBkz.u         = inU;
-      cmapLapParaTaskDeepBkz.seed      = inSeed;
-      cmapLapParaTaskDeepBkz.basis     = inBasis;
+      cmapLapParaTaskBkz.begin     = inBegin;
+      cmapLapParaTaskBkz.end       = inEnd;
+      cmapLapParaTaskBkz.blocksize = inBlockSize;
+      cmapLapParaTaskBkz.u         = inU;
+      cmapLapParaTaskBkz.seed      = inSeed;
+      cmapLapParaTaskBkz.basis     = inBasis;
    }
 
    ///
@@ -199,25 +199,25 @@ public:
    }
 
    ///
-   /// upudate paraSolverTask DeepBkz
+   /// upudate paraSolverTask Bkz
    ///
-   virtual void updateDeepBkz(
+   virtual void updateBkz(
          int inBlockSize,
          int *inBasis
          )
    {
-      assert( solverType == DeepBkz );
-      cmapLapParaTaskDeepBkz.blocksize = inBlockSize;
+      assert( solverType == Bkz );
+      cmapLapParaTaskBkz.blocksize = inBlockSize;
       if( inBasis )
       {
-         int nRow = cmapLapParaTaskDeepBkz.basis->rows();
-         int nCol = cmapLapParaTaskDeepBkz.basis->cols();
-         *cmapLapParaTaskDeepBkz.basis = Eigen::Map<LatticeBasis<int>>(inBasis, nRow, nCol);
+         int nRow = cmapLapParaTaskBkz.basis->rows();
+         int nCol = cmapLapParaTaskBkz.basis->cols();
+         *cmapLapParaTaskBkz.basis = Eigen::Map<LatticeBasis<int>>(inBasis, nRow, nCol);
       }
    }
 
    ///
-   /// upudate paraSolverTask DeepBkz
+   /// upudate paraSolverTask Bkz
    ///
    virtual void updateEnum(
          int  inStart,
@@ -340,14 +340,14 @@ public:
             << estimatedValue;
       switch( solverType )
       {
-      case DeepBkz:
-         s << " DeepBkz"
-           << ", begin = "       << cmapLapParaTaskDeepBkz.begin
-           << ", end = "         << cmapLapParaTaskDeepBkz.end
-           << ", u = "           << cmapLapParaTaskDeepBkz.u
-           << ", seed = "        << cmapLapParaTaskDeepBkz.seed
-           << ", basis.size = (" << cmapLapParaTaskDeepBkz.basis->rows()
-           << ", "               << cmapLapParaTaskDeepBkz.basis->cols()
+      case Bkz:
+         s << " Bkz"
+           << ", begin = "       << cmapLapParaTaskBkz.begin
+           << ", end = "         << cmapLapParaTaskBkz.end
+           << ", u = "           << cmapLapParaTaskBkz.u
+           << ", seed = "        << cmapLapParaTaskBkz.seed
+           << ", basis.size = (" << cmapLapParaTaskBkz.basis->rows()
+           << ", "               << cmapLapParaTaskBkz.basis->cols()
            << ")"
            << std::endl;
          break;
@@ -387,8 +387,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return toStringLogDeepBkz(delimiter);
+      case Bkz:
+         return toStringLogBkz(delimiter);
       case Enum:
          return toStringLogEnum(delimiter);
       case Sieve:
@@ -400,15 +400,15 @@ public:
 
    ///
    /// stringfy CMapLapParaSolverStateData
-   /// @return string to show inside of CMapLapParaSolverStateDeepBkz
+   /// @return string to show inside of CMapLapParaSolverStateBkz
    ///
-   virtual const std::string toStringLogDeepBkz(
+   virtual const std::string toStringLogBkz(
          std::string delimiter=""
          )
    {
-      std::string taskName             = "DeepBkz";
+      std::string taskName             = "Bkz";
       double      elapsedTime          = 0.0;
-      int         size                 = cmapLapParaTaskDeepBkz.blocksize;
+      int         size                 = cmapLapParaTaskBkz.blocksize;
       long int    iter                 = 0;
       double      progress             = 0.0;
       double      leftTime             = -1.0;
@@ -499,8 +499,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaTaskDeepBkz.basis->cols();
+      case Bkz:
+         return cmapLapParaTaskBkz.basis->cols();
       case Enum:
          return cmapLapParaTaskEnum.basis->cols();
       case Sieve:
@@ -519,8 +519,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaTaskDeepBkz.basis->rows();
+      case Bkz:
+         return cmapLapParaTaskBkz.basis->rows();
       case Enum:
          return cmapLapParaTaskEnum.basis->rows();
       case Sieve:
@@ -538,8 +538,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaTaskDeepBkz.basis;
+      case Bkz:
+         return cmapLapParaTaskBkz.basis;
       case Enum:
          return cmapLapParaTaskEnum.basis;
       case Sieve:
@@ -567,8 +567,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaTaskDeepBkz.begin;
+      case Bkz:
+         return cmapLapParaTaskBkz.begin;
       case Enum:
          return cmapLapParaTaskEnum.begin;
       case Sieve:
@@ -586,8 +586,8 @@ public:
    {
       switch( solverType )
       {
-      case DeepBkz:
-         return cmapLapParaTaskDeepBkz.end;
+      case Bkz:
+         return cmapLapParaTaskBkz.end;
       case Enum:
          return cmapLapParaTaskEnum.end;
       case Sieve:
@@ -623,8 +623,8 @@ public:
    ///
    virtual int getU()
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaTaskDeepBkz.u;
+      assert( solverType == Bkz );
+      return cmapLapParaTaskBkz.u;
    }
 
    ///
@@ -634,8 +634,8 @@ public:
          int inU
          )
    {
-      assert( solverType == DeepBkz );
-      cmapLapParaTaskDeepBkz.u = inU;
+      assert( solverType == Bkz );
+      cmapLapParaTaskBkz.u = inU;
    }
 
    ///
@@ -644,8 +644,8 @@ public:
    ///
    virtual int getSeed()
    {
-      assert( solverType == DeepBkz );
-      return cmapLapParaTaskDeepBkz.seed;
+      assert( solverType == Bkz );
+      return cmapLapParaTaskBkz.seed;
    }
 
    ///
@@ -673,7 +673,7 @@ class CMapLapParaTaskLC : public CMapLapParaTask
 
 public:
    ///
-   /// constructor DeepBkz
+   /// constructor Bkz
    ///
    CMapLapParaTaskLC(
          UG::TaskId inTaskId,                ///< task id
@@ -704,7 +704,7 @@ public:
    virtual ~CMapLapParaTaskLC(
       )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
    }
 
    ///
@@ -724,15 +724,15 @@ public:
          UG::ParaComm *comm   ///< communicator used
          )
    {
-      assert( solverType == DeepBkz );
+      assert( solverType == Bkz );
       return ( new
          CMapLapParaTaskLC(taskId, generatorTaskId, estimatedValue, threadId,
-               cmapLapParaTaskDeepBkz.begin,
-               cmapLapParaTaskDeepBkz.end,
-               cmapLapParaTaskDeepBkz.blocksize,
-               cmapLapParaTaskDeepBkz.u,
-               cmapLapParaTaskDeepBkz.seed,
-               std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskDeepBkz.basis))
+               cmapLapParaTaskBkz.begin,
+               cmapLapParaTaskBkz.end,
+               cmapLapParaTaskBkz.blocksize,
+               cmapLapParaTaskBkz.u,
+               cmapLapParaTaskBkz.seed,
+               std::make_shared<LatticeBasis<int>>(*(cmapLapParaTaskBkz.basis))
             )
          );
    }

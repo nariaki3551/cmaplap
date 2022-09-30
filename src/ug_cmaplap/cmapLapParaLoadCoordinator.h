@@ -56,7 +56,7 @@
 #include "cmapLapParaLoadCoordinatorTerminationState.h"
 namespace UG { class ParaDeterministicTimer; }
 namespace UG { class ParaInitiator; }
-namespace UG { class PcmapDeepBkzParaLoadCoordinator; }
+namespace UG { class PcmapBkzParaLoadCoordinator; }
 namespace UG { class ParaTimer; }
 namespace ParaCMapLAP { class BasisElement; }
 namespace ParaCMapLAP { class BasisElementQueue; }
@@ -96,7 +96,7 @@ public:
    std::shared_ptr<VectorElementQueue>    vectorElementQueue;
    std::shared_ptr<BasisElementQueue>     basisElementQueue;
    std::shared_ptr<CMapLapParaTaskQueue>  paraActiveTaskQueue;
-   std::shared_ptr<CMapLapParaTaskQueue>  paraDeepBkzTaskQueue;
+   std::shared_ptr<CMapLapParaTaskQueue>  paraBkzTaskQueue;
    std::shared_ptr<CMapLapParaTaskQueue>  paraEnumTaskQueue;
    std::shared_ptr<CMapLapParaTaskQueue>  paraSieveTaskQueue;
    std::shared_ptr<CMapLapParaSolution>   globalBestCMapLapSolution;
@@ -112,7 +112,7 @@ public:
          vectorElementQueue(nullptr),
          basisElementQueue(nullptr),
          paraActiveTaskQueue(nullptr),
-         paraDeepBkzTaskQueue(nullptr),
+         paraBkzTaskQueue(nullptr),
          paraEnumTaskQueue(nullptr),
          paraSieveTaskQueue(nullptr),
          globalBestCMapLapSolution(nullptr),
@@ -162,7 +162,7 @@ class CMapLapParaLoadCoordinator : public UG::ParaLoadCoordinator
    ///
    /// Task Pool
    ///
-   std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> paraDeepBkzTaskPool;
+   std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> paraBkzTaskPool;
    std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> paraEnumTaskPool;
    std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> paraSieveTaskPool;
 
@@ -428,7 +428,7 @@ class CMapLapParaLoadCoordinator : public UG::ParaLoadCoordinator
    virtual bool shouldCreateAndAssignTask(
          SolverType &solverType,
          bool &hasSetInitialSolvers,
-         bool &hasSetInitialDeepBkzSolvers
+         bool &hasSetInitialBkzSolvers
          );
 
    ///
@@ -449,9 +449,9 @@ class CMapLapParaLoadCoordinator : public UG::ParaLoadCoordinator
          );
 
    ///
-   /// create CMapLapParaTask DeepBkz and insert into DeepBkzTaskPool
+   /// create CMapLapParaTask Bkz and insert into BkzTaskPool
    ///
-   virtual int createParaTaskDeepBkz(
+   virtual int createParaTaskBkz(
          int begin,
          int end
          );
@@ -644,12 +644,12 @@ public:
 
 
    ///
-   /// getter of paraDeepBkzTaskPool
+   /// getter of paraBkzTaskPool
    ///
-   virtual std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> getParaDeepBkzTaskPool(
+   virtual std::shared_ptr<CMapLapParaTaskPoolInAscendingOrder> getParaBkzTaskPool(
          )
    {
-      return paraDeepBkzTaskPool;
+      return paraBkzTaskPool;
    }
 
    ///

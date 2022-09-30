@@ -149,19 +149,19 @@ protected:
    double                      idleTimeToWaitBasis;         ///< idle time to wait basis
    double                      idleTimeToWaitIsend;         ///< idle time to wait Isend
 
-   int                         nParaTasksDeepBkzReceived;   ///< number of DeepBkz ParaTasks received in this solver
+   int                         nParaTasksBkzReceived;       ///< number of Bkz ParaTasks received in this solver
    int                         nParaTasksEnumReceived;      ///< number of Enum ParaTasks received in this solver
    int                         nParaTasksSieveReceived;     ///< number of Sieve ParaTasks received in this solver
-   double                      runningTimeDeepBkz;          ///< this solver running time of DeepBkz
+   double                      runningTimeBkz;              ///< this solver running time of Bkz
    double                      runningTimeEnum;             ///< this solver running time of Enum
    double                      runningTimeSieve;            ///< this solver running time of Sieve
-   int                         nVectorsReceivedDeepBkz;     ///< number of vectors received in DeepBkz
+   int                         nVectorsReceivedBkz;         ///< number of vectors received in Bkz
    int                         nVectorsReceivedEnum;        ///< number of vectors received in Enum
    int                         nVectorsReceivedSieve;       ///< number of vectors received in Sieve
-   int                         nVectorsSentDeepBkz;         ///< number of vectors sent in DeepBkz
+   int                         nVectorsSentBkz;             ///< number of vectors sent in Bkz
    int                         nVectorsSentEnum;            ///< number of vectors sent in Enum
    int                         nVectorsSentSieve;           ///< number of vectors sent in Sieve
-   int                         nBasesSentDeepBkz;           ///< number of vectors sent in DeepBkz
+   int                         nBasesSentBkz;               ///< number of vectors sent in Bkz
    int                         nSolverStateSent;            ///< number of solver states sent
 
    MessageQueueSizeHistory     messageQueueSizeHistory;     ///< history of the message queue size
@@ -592,12 +592,12 @@ public:
    virtual bool wasTerminatedNormally(){ return true; }
 
    ///
-   /// send Solver State DeepBkz
+   /// send Solver State Bkz
    ///
    virtual void sendSolverState(
       LatticeBasis<int>& inBasis,   ///< current basis
-      int      inCurrentBlockSize,  ///< current DeepBkz block size
-      int      inTour,              ///< number of DeepBkz loop
+      int      inCurrentBlockSize,  ///< current Bkz block size
+      int      inTour,              ///< number of Bkz loop
       double   inElapsedTime        ///< elapsed time
       );
 
@@ -629,12 +629,12 @@ public:
 
 
    ///
-   /// send CalcutationState DeepBkz
+   /// send CalcutationState Bkz
    ///
-   virtual void sendDeepBkzCalculationState(
+   virtual void sendBkzCalculationState(
          LatticeBasis<int>& inBasis,    ///< current basis
-         int      inCurrentBlockSize,   ///< current DeepBkz block size
-         int      inTour,               ///< number of DeepBkz loop
+         int      inCurrentBlockSize,   ///< current Bkz block size
+         int      inTour,               ///< number of Bkz loop
          double   inElapsedTime         ///< elapsed time
          );
 

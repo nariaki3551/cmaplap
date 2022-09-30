@@ -553,7 +553,7 @@ void
 CMapLapParaInitiator::outputFinalSolverStatistics(
       std::ostream *os,
       double time,
-      double totalDeepBkzTime,
+      double totalBkzTime,
       double totalEnumTime,
       double totalSieveTime
       )
@@ -603,8 +603,8 @@ CMapLapParaInitiator::outputFinalSolverStatistics(
    *os << "Total Wall Time       : " << time << std::endl;
    *os << "  LC process          : " << 0 << std::endl;
    *os << "  solving             : " << time << std::endl;
-   *os << "Total CPU Time        : " << totalDeepBkzTime + totalEnumTime + totalSieveTime << std::endl;
-   *os << "  total DeepBkz time  : " << totalDeepBkzTime << std::endl;
+   *os << "Total CPU Time        : " << totalBkzTime + totalEnumTime + totalSieveTime << std::endl;
+   *os << "  total Bkz time      : " << totalBkzTime << std::endl;
    *os << "  total Enum    time  : " << totalEnumTime << std::endl;
    *os << "  total Sieve   time  : " << totalSieveTime << std::endl;
    *os << "Task                  : " << std::endl;

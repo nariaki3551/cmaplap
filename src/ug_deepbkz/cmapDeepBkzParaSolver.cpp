@@ -50,11 +50,11 @@ CMapDeepBkzParaSolver::solve(
 {
    terminationState = 0;
    double startElapsedTime = paraTimer->getElapsedTime();
-   if( getSolverType() == DeepBkz )
+   if( getSolverType() == Bkz )
    {
-      nParaTasksDeepBkzReceived++;
+      nParaTasksBkzReceived++;
       runDeepBkz();
-      runningTimeDeepBkz += paraTimer->getElapsedTime() - startElapsedTime;
+      runningTimeBkz += paraTimer->getElapsedTime() - startElapsedTime;
    }
    else
    {
@@ -114,7 +114,7 @@ CMapDeepBkzParaSolver::runDeepBkz(
    // Notification message has to complete
    if( notificationProcessed ){ waitNotificationIdMessage(); }
 
-   sendDeepBkzCalculationState(
+   sendBkzCalculationState(
          L->basis,
          blocksize,
          reductionObj.getNTour(),

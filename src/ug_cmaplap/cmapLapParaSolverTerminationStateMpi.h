@@ -95,19 +95,19 @@ public:
          double       inIdleTimeToWaitBasis,          ///< idle time to wait basis
          double       inIdleTimeToWaitIsend,          ///< idle time to wait Isend
          double       inDetTime,                      ///< deterministic time, -1: should be non-deterministic
-         int          inNParaTasksDeepBkzReceived,    ///< number of DeepBkz ParaTasks received in this solver
+         int          inNParaTasksBkzReceived,        ///< number of Bkz ParaTasks received in this solver
          int          inNParaTasksEnumReceived,       ///< number of Enum ParaTasks received in this solver
          int          inNParaTasksSieveReceived,      ///< number of Sieve ParaTasks received in this solver
-         double       inRunningTimeDeepBkz,           ///< this solver running time of DeepBkz
+         double       inRunningTimeBkz,               ///< this solver running time of Bkz
          double       inRunningTimeEnum,              ///< this solver running time of Enum
          double       inRunningTimeSieve,             ///< this solver running time of Sieve
-         int          inNVectorsReceivedDeepBkz,      ///< number of vectors received in DeepBkz
+         int          inNVectorsReceivedBkz,          ///< number of vectors received in Bkz
          int          inNVectorsReceivedEnum,         ///< number of vectors received in Enum
          int          inNVectorsReceivedSieve,        ///< number of vectors received in Sieve
-         int          inNVectorsSentDeepBkz,          ///< number of vectors sent in DeepBkz
+         int          inNVectorsSentBkz,              ///< number of vectors sent in Bkz
          int          inNVectorsSentEnum,             ///< number of vectors sent in Enum
          int          inNVectorsSentSieve,            ///< number of vectors sent in Sieve
-         int          inNBasesSentDeepBkz,            ///< number of vectors sent in DeepBkz
+         int          inNBasesSentBkz,                ///< number of vectors sent in Bkz
          int          inNSolverStateSent              ///< number of solver states sent
          )
          : CMapLapParaSolverTerminationState(
@@ -129,19 +129,19 @@ public:
                inIdleTimeToWaitBasis,
                inIdleTimeToWaitIsend,
                inDetTime,
-               inNParaTasksDeepBkzReceived,
+               inNParaTasksBkzReceived,
                inNParaTasksEnumReceived,
                inNParaTasksSieveReceived,
-               inRunningTimeDeepBkz,
+               inRunningTimeBkz,
                inRunningTimeEnum,
                inRunningTimeSieve,
-               inNVectorsReceivedDeepBkz,
+               inNVectorsReceivedBkz,
                inNVectorsReceivedEnum,
                inNVectorsReceivedSieve,
-               inNVectorsSentDeepBkz,
+               inNVectorsSentBkz,
                inNVectorsSentEnum,
                inNVectorsSentSieve,
-               inNBasesSentDeepBkz,
+               inNBasesSentBkz,
                inNSolverStateSent
                )
    {

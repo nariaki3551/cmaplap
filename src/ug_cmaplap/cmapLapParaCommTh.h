@@ -250,19 +250,19 @@ public:
          double       inIdleTimeToWaitBasis,          ///< idle time to wait basis
          double       inIdleTimeToWaitIsend,          ///< idle time to wait Isend
          double       inDetTime,                      ///< deterministic time, -1: should be non-deterministic
-         int          inNParaTasksDeepBkzReceived,    ///< number of DeepBkz ParaTasks received in this solver
+         int          inNParaTasksBkzReceived,        ///< number of Bkz ParaTasks received in this solver
          int          inNParaTasksEnumReceived,       ///< number of Enum ParaTasks received in this solver
          int          inNParaTasksSieveReceived,      ///< number of Sieve ParaTasks received in this solver
-         double       inRunningTimeDeepBkz,           ///< this solver running time of DeepBkz
+         double       inRunningTimeBkz,               ///< this solver running time of Bkz
          double       inRunningTimeEnum,              ///< this solver running time of Enum
          double       inRunningTimeSieve,             ///< this solver running time of Sieve
-         int          inNVectorsReceivedDeepBkz,      ///< number of vectors received in DeepBkz
+         int          inNVectorsReceivedBkz,          ///< number of vectors received in Bkz
          int          inNVectorsReceivedEnum,         ///< number of vectors received in Enum
          int          inNVectorsReceivedSieve,        ///< number of vectors received in Sieve
-         int          inNVectorsSentDeepBkz,          ///< number of vectors sent in DeepBkz
+         int          inNVectorsSentBkz,              ///< number of vectors sent in Bkz
          int          inNVectorsSentEnum,             ///< number of vectors sent in Enum
          int          inNVectorsSentSieve,            ///< number of vectors sent in Sieve
-         int          inNBasesSentDeepBkz,            ///< number of vectors sent in DeepBkz
+         int          inNBasesSentBkz,                ///< number of vectors sent in Bkz
          int          inNSolverStateSent              ///< number of solver states sent
          );
 
@@ -275,7 +275,7 @@ public:
          );
 
    ///
-   /// create ParaTask DeepBkz object by constructor
+   /// create ParaTask Bkz object by constructor
    /// @return pointer to ParaTask object
    ///
    virtual UG::ParaTask *createParaTask(
@@ -325,7 +325,7 @@ public:
 
 
    ///
-   /// create ParaSolverState DeepBkz object by default constructor
+   /// create ParaSolverState Bkz object by default constructor
    /// @return pointer to ParaSolverState object
    ///
    virtual UG::ParaSolverState *createParaSolverState(
@@ -339,8 +339,8 @@ public:
          int           inMeanMessageQueueSize,  ///< mean of the message queue size
          int           inMaxMessageQueueSize,   ///< max of the message queue size
          int*          inBasis,                 ///< 1-dimension array of lattice basis row major
-         int           inCurrentBlockSize,      ///< current DeepBkz block size
-         int           inTour,                  ///< number of DeepBkz loop
+         int           inCurrentBlockSize,      ///< current Bkz block size
+         int           inTour,                  ///< number of Bkz loop
          double        inElapsedTime,           ///< elapsed time
          double        inShortestNorm,          ///< the shortest norm found
          double        inApproxFactor,          ///< approximated factor
@@ -479,14 +479,14 @@ public:
 
 
    ///
-   /// create CMapLapParaCalculationState DeepBkz object
+   /// create CMapLapParaCalculationState Bkz object
    /// @return pointer to CMapLapParaCalculationState object
    ///
    virtual UG::ParaCalculationState *createParaCalculationState(
          int          inTermState,          ///< termination status, 0: normal, -1: interrupted
          int          inThreadId,           ///< thread id
-         int          inCurrentBlockSize,   ///< current DeepBkz block size
-         int          inTour,               ///< number of DeepBkz loop
+         int          inCurrentBlockSize,   ///< current Bkz block size
+         int          inTour,               ///< number of Bkz loop
          double       inElapsedTime,        ///< elapsed time
          double       inShortestNorm,       ///< the shortest norm found
          double       inApproxFactor,       ///< approximated factor

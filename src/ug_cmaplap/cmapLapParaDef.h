@@ -69,7 +69,7 @@ static const double infinity = 1e+75;
 static const int ON_MEMORY_TRANSFER = 0;
 
 enum SolverType {
-   DeepBkz,
+   Bkz,
    Enum,
    Sieve,
    Undefined

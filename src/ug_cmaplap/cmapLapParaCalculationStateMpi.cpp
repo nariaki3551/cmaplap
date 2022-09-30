@@ -53,7 +53,7 @@ namespace ParaCMapLAP
 /// @return
 ///
 MPI_Datatype
-CMapLapParaCalculationStateMpi::createDatatypeDeepBkz(
+CMapLapParaCalculationStateMpi::createDatatypeBkz(
       )
 {
 
@@ -95,65 +95,65 @@ CMapLapParaCalculationStateMpi::createDatatypeDeepBkz(
    displacements[3] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.currentBlockSize, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.currentBlockSize, &address )
    );
    displacements[4] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.tour, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.tour, &address )
    );
    displacements[5] = address - startAddress;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.shortestNorm, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.shortestNorm, &address )
    );
    displacements[6] = address - startAddress;
    types[6] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.approxFactor, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.approxFactor, &address )
    );
    displacements[7] = address - startAddress;
    types[7] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.hermiteFactor, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.hermiteFactor, &address )
    );
    displacements[8] = address - startAddress;
    types[8] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.rootHermiteFactor, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.rootHermiteFactor, &address )
    );
    displacements[9] = address - startAddress;
    types[9] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCost, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCost, &address )
    );
    displacements[10] = address - startAddress;
    types[10] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.enumCostGH, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.enumCostGH, &address )
    );
    displacements[11] = address - startAddress;
    types[11] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.slopeGSA, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.slopeGSA, &address )
    );
    displacements[12] = address - startAddress;
    types[12] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.topHalfSlopeGSA, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.topHalfSlopeGSA, &address )
    );
    displacements[13] = address - startAddress;
    types[13] = MPI_DOUBLE;
 
    MPI_CALL(
-      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateDeepBkz.orthogonalFactor, &address )
+      MPI_Get_address( &cmapLapParaCalculationStateData.cmapLapParaCalculationStateBkz.orthogonalFactor, &address )
    );
    displacements[14] = address - startAddress;
    types[14] = MPI_DOUBLE;
@@ -381,20 +381,20 @@ CMapLapParaCalculationStateMpi::send(
 
    switch( solverType )
    {
-   case DeepBkz:
+   case Bkz:
    {
-      MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+      MPI_Datatype datatypeBkz = createDatatypeBkz();
       MPI_CALL(
-         MPI_Type_commit( &datatypeDeepBkz )
+         MPI_Type_commit( &datatypeBkz )
       );
       auto req1 = std::make_shared<MPI_Request>();
       PARA_COMM_CALL(
-         commMpi->iUsend(&compTime, 1, datatypeDeepBkz, destination, TagCompletionOfCalculation1, req1.get())
+         commMpi->iUsend(&compTime, 1, datatypeBkz, destination, TagCompletionOfCalculation1, req1.get())
       );
       auto iSendReq1 = std::make_shared<CMapLapParaIsendRequest>(req1, shared_from_this());
       commMpi->pushISendRequest(iSendReq1);
       MPI_CALL(
-         MPI_Type_free( &datatypeDeepBkz )
+         MPI_Type_free( &datatypeBkz )
       );
       break;
    }
@@ -455,8 +455,8 @@ CMapLapParaCalculationStateMpi::receive(
 
    switch( iSolverType )
    {
-   case static_cast<int>(DeepBkz):
-      solverType = DeepBkz;
+   case static_cast<int>(Bkz):
+      solverType = Bkz;
       break;
    case static_cast<int>(Enum):
       solverType = Enum;
@@ -473,17 +473,17 @@ CMapLapParaCalculationStateMpi::receive(
 
    switch( solverType )
    {
-      case DeepBkz:
+      case Bkz:
    {
-      MPI_Datatype datatypeDeepBkz = createDatatypeDeepBkz();
+      MPI_Datatype datatypeBkz = createDatatypeBkz();
       MPI_CALL(
-         MPI_Type_commit( &datatypeDeepBkz )
+         MPI_Type_commit( &datatypeBkz )
       );
       PARA_COMM_CALL(
-         commMpi->ureceive(&compTime, 1, datatypeDeepBkz, source, TagCompletionOfCalculation1)
+         commMpi->ureceive(&compTime, 1, datatypeBkz, source, TagCompletionOfCalculation1)
       );
       MPI_CALL(
-         MPI_Type_free( &datatypeDeepBkz )
+         MPI_Type_free( &datatypeBkz )
       );
       break;
    }

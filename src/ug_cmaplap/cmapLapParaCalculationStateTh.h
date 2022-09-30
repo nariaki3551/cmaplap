@@ -75,8 +75,8 @@ public:
    CMapLapParaCalculationStateTh(
          int          inTermState,          ///< termination status, 0: normal, -1: interrupted
          int          inThreadId,           ///< thread id
-         int          inCurrentBlockSize,   ///< current DeepBkz block size
-         int          inTour,               ///< number of DeepBkz loop
+         int          inCurrentBlockSize,   ///< current Bkz block size
+         int          inTour,               ///< number of Bkz loop
          double       inElapsedTime,        ///< elapsed time
          double       inShortestNorm,       ///< the shortest norm found
          double       inApproxFactor,       ///< approximated factor

@@ -74,42 +74,42 @@ public:
    /// constructor
    ///
    CMapLapParaSolverTerminationStateTh(
-         int          inThreadId,                             ///< thread id
-         int          inInterrupted,                          ///< indicate that this solver is interrupted or not.
-                                                              ///< 0: not interrupted,
-                                                              ///< 1: interrupted
-                                                              ///< 2: checkpoint,
-                                                              ///< 3: racing-ramp up
-         int          inRank,                                 ///< rank of this solver
-         int          inNParaNodesReceived,                   ///< number of ParaNodes received in this ParaSolver
-         int          inNParaNodesSolved,                     ///< number of ParaNodes solved ( received ) in this ParaSolver
-         double       inRunningTime,                          ///< this solver running time
-         double       inIdleTimeToFirstParaNode,              ///< idle time to start solving the first ParaNode
-         double       inIdleTimeBetweenParaNodes,             ///< idle time between ParaNodes processing
-         double       inIdleTimeAfterLastParaNode,            ///< idle time after the last ParaNode was solved
-         double       inIdleTimeToWaitNotificationId,         ///< idle time to wait notification Id messages
-         double       inIdleTimeToWaitAckCompletion,          ///< idle time to wait ack completion message
-         double       inIdleTimeToWaitToken,                  ///< idle time to wait token
-         double       inIdleTimeToWaitSolverState,            ///< idle time to wait solver state
-         double       inIdleTimeToWaitPackedVector,           ///< idle time to wait packed vector
-         double       inIdleTimeToWaitSolution,               ///< idle time to wait solution
-         double       inIdleTimeToWaitBasis,                  ///< idle time to wait basis
-         double       inIdleTimeToWaitIsend,                  ///< idle time to wait Isend
-         double       inDetTime,                              ///< deterministic time, -1: should be non-deterministic
-         int          inNParaTasksDeepBkzReceived,            ///< number of DeepBkz ParaTasks received in this solver
-         int          inNParaTasksEnumReceived,               ///< number of Enum ParaTasks received in this solver
-         int          inNParaTasksSieveReceived,              ///< number of Sieve ParaTasks received in this solver
-         double       inRunningTimeDeepBkz,                   ///< this solver running time of DeepBkz
-         double       inRunningTimeEnum,                      ///< this solver running time of Enum
-         double       inRunningTimeSieve,                     ///< this solver running time of Sieve
-         int          inNVectorsReceivedDeepBkz,              ///< number of vectors received in DeepBkz
-         int          inNVectorsReceivedEnum,                 ///< number of vectors received in Enum
-         int          inNVectorsReceivedSieve,                ///< number of vectors received in Sieve
-         int          inNVectorsSentDeepBkz,                  ///< number of vectors sent in DeepBkz
-         int          inNVectorsSentEnum,                     ///< number of vectors sent in Enum
-         int          inNVectorsSentSieve,                    ///< number of vectors sent in Sieve
-         int          inNBasesSentDeepBkz,                    ///< number of vectors sent in DeepBkz
-         int          inNSolverStateSent                      ///< number of solver states sent
+         int          inThreadId,                           ///< thread id
+         int          inInterrupted,                        ///< indicate that this solver is interrupted or not.
+                                                            ///< 0: not interrupted,
+                                                            ///< 1: interrupted
+                                                            ///< 2: checkpoint,
+                                                            ///< 3: racing-ramp up
+         int          inRank,                               ///< rank of this solver
+         int          inNParaNodesReceived,                 ///< number of ParaNodes received in this ParaSolver
+         int          inNParaNodesSolved,                   ///< number of ParaNodes solved ( received ) in this ParaSolver
+         double       inRunningTime,                        ///< this solver running time
+         double       inIdleTimeToFirstParaNode,            ///< idle time to start solving the first ParaNode
+         double       inIdleTimeBetweenParaNodes,           ///< idle time between ParaNodes processing
+         double       inIdleTimeAfterLastParaNode,          ///< idle time after the last ParaNode was solved
+         double       inIdleTimeToWaitNotificationId,       ///< idle time to wait notification Id messages
+         double       inIdleTimeToWaitAckCompletion,        ///< idle time to wait ack completion message
+         double       inIdleTimeToWaitToken,                ///< idle time to wait token
+         double       inIdleTimeToWaitSolverState,          ///< idle time to wait solver state
+         double       inIdleTimeToWaitPackedVector,         ///< idle time to wait packed vector
+         double       inIdleTimeToWaitSolution,             ///< idle time to wait solution
+         double       inIdleTimeToWaitBasis,                ///< idle time to wait basis
+         double       inIdleTimeToWaitIsend,                ///< idle time to wait Isend
+         double       inDetTime,                            ///< deterministic time, -1: should be non-deterministic
+         int          inNParaTasksBkzReceived,              ///< number of Bkz ParaTasks received in this solver
+         int          inNParaTasksEnumReceived,             ///< number of Enum ParaTasks received in this solver
+         int          inNParaTasksSieveReceived,            ///< number of Sieve ParaTasks received in this solver
+         double       inRunningTimeBkz,                     ///< this solver running time of Bkz
+         double       inRunningTimeEnum,                    ///< this solver running time of Enum
+         double       inRunningTimeSieve,                   ///< this solver running time of Sieve
+         int          inNVectorsReceivedBkz,                ///< number of vectors received in Bkz
+         int          inNVectorsReceivedEnum,               ///< number of vectors received in Enum
+         int          inNVectorsReceivedSieve,              ///< number of vectors received in Sieve
+         int          inNVectorsSentBkz,                    ///< number of vectors sent in Bkz
+         int          inNVectorsSentEnum,                   ///< number of vectors sent in Enum
+         int          inNVectorsSentSieve,                  ///< number of vectors sent in Sieve
+         int          inNBasesSentBkz,                      ///< number of vectors sent in Bkz
+         int          inNSolverStateSent                    ///< number of solver states sent
          )
          : CMapLapParaSolverTerminationState(
                inThreadId,
@@ -130,19 +130,19 @@ public:
                inIdleTimeToWaitBasis,
                inIdleTimeToWaitIsend,
                inDetTime,
-               inNParaTasksDeepBkzReceived,
+               inNParaTasksBkzReceived,
                inNParaTasksEnumReceived,
                inNParaTasksSieveReceived,
-               inRunningTimeDeepBkz,
+               inRunningTimeBkz,
                inRunningTimeEnum,
                inRunningTimeSieve,
-               inNVectorsReceivedDeepBkz,
+               inNVectorsReceivedBkz,
                inNVectorsReceivedEnum,
                inNVectorsReceivedSieve,
-               inNVectorsSentDeepBkz,
+               inNVectorsSentBkz,
                inNVectorsSentEnum,
                inNVectorsSentSieve,
-               inNBasesSentDeepBkz,
+               inNBasesSentBkz,
                inNSolverStateSent
            )
    {

@@ -220,19 +220,19 @@ CMapLapParaSolver::CMapLapParaSolver(
       idleTimeToWaitSolution(0.0),
       idleTimeToWaitBasis(0.0),
       idleTimeToWaitIsend(0.0),
-      nParaTasksDeepBkzReceived(0),
+      nParaTasksBkzReceived(0),
       nParaTasksEnumReceived(0),
       nParaTasksSieveReceived(0),
-      runningTimeDeepBkz(0.0),
+      runningTimeBkz(0.0),
       runningTimeEnum(0.0),
       runningTimeSieve(0.0),
-      nVectorsReceivedDeepBkz(0),
+      nVectorsReceivedBkz(0),
       nVectorsReceivedEnum(0),
       nVectorsReceivedSieve(0),
-      nVectorsSentDeepBkz(0),
+      nVectorsSentBkz(0),
       nVectorsSentEnum(0),
       nVectorsSentSieve(0),
-      nBasesSentDeepBkz(0),
+      nBasesSentBkz(0),
       nSolverStateSent(0),
       osLog(0)
 {
@@ -458,19 +458,19 @@ CMapLapParaSolver::~CMapLapParaSolver(
             idleTimeToWaitBasis,
             idleTimeToWaitIsend,
             0.0,  // detTime
-            nParaTasksDeepBkzReceived,
+            nParaTasksBkzReceived,
             nParaTasksEnumReceived,
             nParaTasksSieveReceived,
-            runningTimeDeepBkz,
+            runningTimeBkz,
             runningTimeEnum,
             runningTimeSieve,
-            nVectorsReceivedDeepBkz,
+            nVectorsReceivedBkz,
             nVectorsReceivedEnum,
             nVectorsReceivedSieve,
-            nVectorsSentDeepBkz,
+            nVectorsSentBkz,
             nVectorsSentEnum,
             nVectorsSentSieve,
-            nBasesSentDeepBkz,
+            nBasesSentBkz,
             nSolverStateSent
             ))};
 
@@ -1025,8 +1025,8 @@ CMapLapParaSolver::processTagCMapLapPackedVector(
    // counter
    switch( getSolverType() )
    {
-      case DeepBkz:
-         nVectorsReceivedDeepBkz += receivedPackedVector->getNVectors();
+      case Bkz:
+         nVectorsReceivedBkz += receivedPackedVector->getNVectors();
          break;
       case Enum:
          nVectorsReceivedEnum += receivedPackedVector->getNVectors();
@@ -1593,13 +1593,13 @@ CMapLapParaSolver::getReceivedVectors(
 
 
 ///
-/// send SolverState DeepBkz
+/// send SolverState Bkz
 ///
 void
 CMapLapParaSolver::sendSolverState(
       LatticeBasis<int>& inBasis,    ///< current basis
-      int      inCurrentBlockSize,   ///< current DeepBkz block size
-      int      inTour,               ///< number of DeepBkz loop
+      int      inCurrentBlockSize,   ///< current Bkz block size
+      int      inTour,               ///< number of Bkz loop
       double   inElapsedTime         ///< elapsed time
       )
 {
@@ -1866,13 +1866,13 @@ CMapLapParaSolver::sendSolverState(
 
 
 ///
-/// send CalcutationState DeepBkz
+/// send CalcutationState Bkz
 ///
 void
-CMapLapParaSolver::sendDeepBkzCalculationState(
+CMapLapParaSolver::sendBkzCalculationState(
       LatticeBasis<int>& inBasis,   ///< current basis
-      int      inCurrentBlockSize,  ///< current DeepBkz block size
-      int      inTour,              ///< number of DeepBkz loop
+      int      inCurrentBlockSize,  ///< current Bkz block size
+      int      inTour,              ///< number of Bkz loop
       double   inElapsedTime        ///< elapsed time
       )
 {
@@ -2147,8 +2147,8 @@ CMapLapParaSolver::sendSolution(
       nImprovedIncumbent++;
       switch ( getSolverType() )
       {
-         case DeepBkz:
-            nVectorsSentDeepBkz++;
+         case Bkz:
+            nVectorsSentBkz++;
             break;
          case Enum:
             nVectorsSentEnum++;
@@ -2237,7 +2237,7 @@ CMapLapParaSolver::sendBasis(
    paraBasis->send(cmapLapParaComm, 0);
    paraComm->unlockApp();
    idleTimeToWaitBasis += paraTimer->getElapsedTime() - startTime;
-   if( getSolverType() == DeepBkz ) nBasesSentDeepBkz++;
+   if( getSolverType() == Bkz ) nBasesSentBkz++;
    sendBasisRequest = false;
 }
 

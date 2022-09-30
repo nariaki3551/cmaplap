@@ -228,13 +228,13 @@ CMapLapParaTaskTh::receive(
    solverType      = received->solverType;
    switch( solverType )
    {
-   case DeepBkz:
-      cmapLapParaTaskDeepBkz.begin     = received->cmapLapParaTaskDeepBkz.begin;
-      cmapLapParaTaskDeepBkz.end       = received->cmapLapParaTaskDeepBkz.end;
-      cmapLapParaTaskDeepBkz.blocksize = received->cmapLapParaTaskDeepBkz.blocksize;
-      cmapLapParaTaskDeepBkz.u         = received->cmapLapParaTaskDeepBkz.u;
-      cmapLapParaTaskDeepBkz.seed      = received->cmapLapParaTaskDeepBkz.seed;
-      cmapLapParaTaskDeepBkz.basis     = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskDeepBkz.basis));
+   case Bkz:
+      cmapLapParaTaskBkz.begin      = received->cmapLapParaTaskBkz.begin;
+      cmapLapParaTaskBkz.end        = received->cmapLapParaTaskBkz.end;
+      cmapLapParaTaskBkz.blocksize  = received->cmapLapParaTaskBkz.blocksize;
+      cmapLapParaTaskBkz.u          = received->cmapLapParaTaskBkz.u;
+      cmapLapParaTaskBkz.seed       = received->cmapLapParaTaskBkz.seed;
+      cmapLapParaTaskBkz.basis      = std::make_shared<LatticeBasis<int>>(*(received->cmapLapParaTaskBkz.basis));
       break;
    case Enum:
       cmapLapParaTaskEnum.begin   = received->cmapLapParaTaskEnum.begin;
