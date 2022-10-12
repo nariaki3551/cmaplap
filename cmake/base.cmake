@@ -28,7 +28,7 @@ add_compile_options(
     -Wredundant-decls
     -Wshadow
     # -Wsign-conversion
-    -Wsign-promo
+    # -Wsign-promo
     -Wstrict-null-sentinel
     -Wswitch-default
     -Wundef
