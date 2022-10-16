@@ -43,6 +43,10 @@
 #include <cfloat>
 
 
+namespace LapTools
+{
+
+
 class Config
 {
 
@@ -207,5 +211,8 @@ public:
          );
 
 };  // class Config
+
+
+}  // namespace LapTools
 
 #endif  // __LAPTOOLS_CONFIG_H__
