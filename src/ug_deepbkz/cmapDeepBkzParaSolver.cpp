@@ -76,7 +76,7 @@ CMapDeepBkzParaSolver::runDeepBkz(
    LatticeBasis<int> basis{*cmapLapParaTask->getBasis()};
    auto L = std::make_shared<LapTools::Lattice<int, double>>(basis);
 
-   Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
+   LapTools::Config config(paraParams->getStringParamValue(CMapLapParamFilePath));
    int verbose = paraParams->getIntParamValue(DeepBkzVerbose);
    config.Quiet = ( verbose == 0 );
    L->setConfig(config);

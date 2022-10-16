@@ -165,7 +165,7 @@ static const int CMapLapParaParamsCharFirst           = CMapLapParaParamsRealLas
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 static const int CMapLapParaParamsCharLast            = CMapLapParaParamsCharFirst - 1;   // No params -1
-static const int CMapLapParaParamsCharN                = CMapLapParaParamsCharLast - CMapLapParaParamsCharFirst + 1;
+static const int CMapLapParaParamsCharN               = CMapLapParaParamsCharLast - CMapLapParaParamsCharFirst + 1;
 ///
 /// String parameters
 ///
